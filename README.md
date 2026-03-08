@@ -20,3 +20,8 @@ open Package.swift
 ```
 
 > The existing `IOS_COUPLE_TODO_APP_DEVELOPMENT_SPEC.md` remains the source of truth for product and backend rules.
+
+
+## Phase 2 status
+- Planning domain kickoff implemented: repository protocols and `SubmitNextDayPlanUseCase`.
+- See `docs/PHASE2_IMPLEMENTATION.md` for details and next steps.

@@ -62,6 +62,24 @@ public struct DailyPlan: Identifiable, Codable, Hashable, Sendable {
     public let localTimezone: String
     public var submittedAt: Date?
     public var planningMissed: Bool
+
+    public init(
+        id: String,
+        userId: String,
+        coupleId: String,
+        dateKey: String,
+        localTimezone: String,
+        submittedAt: Date?,
+        planningMissed: Bool
+    ) {
+        self.id = id
+        self.userId = userId
+        self.coupleId = coupleId
+        self.dateKey = dateKey
+        self.localTimezone = localTimezone
+        self.submittedAt = submittedAt
+        self.planningMissed = planningMissed
+    }
 }
 
 public struct SettlementSummary: Identifiable, Codable, Hashable, Sendable {
@@ -74,6 +92,28 @@ public struct SettlementSummary: Identifiable, Codable, Hashable, Sendable {
     public let requiredCompleted: Int
     public let owesAmount: Decimal
     public let isPass: Bool
+
+    public init(
+        id: String,
+        subjectUserId: String,
+        counterpartyUserId: String,
+        dateKey: String,
+        localTimezone: String,
+        requiredTotal: Int,
+        requiredCompleted: Int,
+        owesAmount: Decimal,
+        isPass: Bool
+    ) {
+        self.id = id
+        self.subjectUserId = subjectUserId
+        self.counterpartyUserId = counterpartyUserId
+        self.dateKey = dateKey
+        self.localTimezone = localTimezone
+        self.requiredTotal = requiredTotal
+        self.requiredCompleted = requiredCompleted
+        self.owesAmount = owesAmount
+        self.isPass = isPass
+    }
 }
 
 public struct WeekReward: Identifiable, Codable, Hashable, Sendable {
@@ -88,4 +128,11 @@ public struct WeekReward: Identifiable, Codable, Hashable, Sendable {
     public let weekKey: String
     public var title: String
     public var status: Status
+
+    public init(id: String, weekKey: String, title: String, status: Status) {
+        self.id = id
+        self.weekKey = weekKey
+        self.title = title
+        self.status = status
+    }
 }
