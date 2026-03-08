@@ -1,24 +1,22 @@
-# to-do
+# Couple To-Do
 
-Couple To-Do iOS app repository.
+Phase 1 baseline for the iOS couple to-do app.
 
-## Current status
+## What is included
+- Swift Package core module: `CoupleTodoCore`
+- Domain models for tasks/plans/settlement/reward
+- Local timezone/day/week context utility
+- Task sorting service (required > optional, then priority/order)
+- Unit tests for cross-timezone date/week logic and task ordering
 
-- Product and engineering spec is in `IOS_COUPLE_TODO_APP_DEVELOPMENT_SPEC.md`.
-- Initial core logic development started in Swift Package `CoupleTodoCore`.
+## Run tests
+```bash
+swift test
+```
 
-## Branching workflow
+## Open in Xcode
+```bash
+open Package.swift
+```
 
-Each feature should be developed in an independent branch and merged via pull request.
-
-Suggested naming:
-
-- `feature/<feature-name>`
-- `fix/<issue-name>`
-- `chore/<task-name>`
-
-This branch (`feature/core-models-settlement-engine`) contains the first feature slice:
-
-- Core task data models
-- Daily settlement engine
-- Settlement unit tests
+> The existing `IOS_COUPLE_TODO_APP_DEVELOPMENT_SPEC.md` remains the source of truth for product and backend rules.

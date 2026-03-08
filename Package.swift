@@ -1,25 +1,24 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.1
 import PackageDescription
 
 let package = Package(
-    name: "CoupleTodoCore",
+    name: "CoupleTodo",
     platforms: [
         .iOS(.v17),
-        .macOS(.v13)
+        .macOS(.v14)
     ],
     products: [
-        .library(
-            name: "CoupleTodoCore",
-            targets: ["CoupleTodoCore"]
-        )
+        .library(name: "CoupleTodoCore", targets: ["CoupleTodoCore"])
     ],
     targets: [
         .target(
-            name: "CoupleTodoCore"
+            name: "CoupleTodoCore",
+            path: "Sources/CoupleTodoCore"
         ),
         .testTarget(
             name: "CoupleTodoCoreTests",
-            dependencies: ["CoupleTodoCore"]
+            dependencies: ["CoupleTodoCore"],
+            path: "Tests/CoupleTodoCoreTests"
         )
     ]
 )
