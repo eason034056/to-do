@@ -8,7 +8,7 @@
 ## Summary
 - `[x]` `CoupleTodoCore` 已成為 shared source of truth，涵蓋 domain models、time context、sorting、planning / dashboard / settlement / reward / task mutation use cases。
 - `[~]` `App/` 已經有 routed SwiftUI shell、deep link、dashboard / planning / settlement / rewards / settings 畫面，以及 demo task/planning CRUD，但目前仍是 in-memory environment，不是真實 Firestore。
-- `[~]` Firestore schema layer 已有 path constants、DTO、domain mapper、server timestamp write payload；但 Firebase SDK 與 Firestore-backed repositories 尚未接上。
+- `[~]` Firestore schema layer 與 Firestore-style repository implementations 已完成到 document-store boundary；Firebase SDK adapter 與真實 listener/sync 尚未接上。
 - `[~]` `Backend/` 已有 Firebase Functions / scheduler / rules 的 skeleton，但沒有真正業務邏輯。
 - `[ ]` 通知、Widget、Live Activity、SwiftData cache、真機驗證、TestFlight 都還沒開始進入可交付狀態。
 
@@ -19,7 +19,7 @@
 - `[~]` Phase 1.1 Auth 與配對：`CreateCouple` / `JoinCouple` core use cases 已完成；Sign in with Apple、session persistence、真實 invite/join flow 與 couple lock 尚未完成。
 - `[~]` Phase 1.2 Couple 設定：config model 與 settings UI 已完成，couple policy 可在 demo repo 內寫回；真實後端同步與通知設定整合尚未完成。
 - `[x]` Phase 1.3 Firestore schema 落地：`users`、`deviceInstallations`、`couples`、`invites`、`plans`、`tasks`、`settlements`、`rewardWeeks`、`events` 的 path constants、DTO、domain mapper、server timestamp write payload 已完成。
-- `[~]` Phase 1.4 Repository 層：repository contracts 與 in-memory repositories 已完成；Firestore-backed `PlanRepository` / `TaskRepository` 與其餘 Firestore repositories 尚未完成。
+- `[~]` Phase 1.4 Repository 層：repository contracts、in-memory repositories，以及建基於 Firestore DTO/path 的 concrete repositories 已完成；最後一層 Firebase SDK adapter 與 app wiring 尚未完成。
 - `[ ]` Phase 1.5 Sync 與快取：Firestore listeners、SwiftData cache、sync state、前景更新策略與錯誤回補尚未完成。
 - `[~]` Phase 1.6 Dashboard 真實化：dashboard 已顯示雙方 local day、required/optional、planning status、settlement、reward 摘要；但仍不是 listener-driven，也不是 Firestore-backed。
 - `[~]` Phase 1.7 Task CRUD：新增、編輯、刪除、完成/取消完成、同 bucket+priority 內重排序、owner-only validation 已完成；optional 帶到隔天與 settlement finalized 後禁止改寫尚未完成。
