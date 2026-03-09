@@ -14,18 +14,26 @@ struct SettlementEngineTests {
                 id: "1",
                 ownerUserId: "usr_1",
                 dateKey: "2026-03-08",
-                bucket: .required,
+                localTimezone: "UTC",
                 title: "Workout",
-                completionState: .completed,
+                notes: nil,
+                bucket: .required,
+                priority: .p0,
+                status: .completed,
+                sortOrder: 1,
                 completedAtServer: completedTime
             ),
             TodoTask(
                 id: "2",
                 ownerUserId: "usr_1",
                 dateKey: "2026-03-08",
-                bucket: .optional,
+                localTimezone: "UTC",
                 title: "Read",
-                completionState: .pending,
+                notes: nil,
+                bucket: .optional,
+                priority: .p1,
+                status: .pending,
+                sortOrder: 2,
                 completedAtServer: nil
             )
         ]
@@ -55,18 +63,26 @@ struct SettlementEngineTests {
                 id: "1",
                 ownerUserId: "usr_1",
                 dateKey: "2026-03-08",
-                bucket: .required,
+                localTimezone: "UTC",
                 title: "Plan tomorrow",
-                completionState: .completed,
+                notes: nil,
+                bucket: .required,
+                priority: .p0,
+                status: .completed,
+                sortOrder: 1,
                 completedAtServer: lateTime
             ),
             TodoTask(
                 id: "2",
                 ownerUserId: "usr_1",
                 dateKey: "2026-03-08",
-                bucket: .required,
+                localTimezone: "UTC",
                 title: "Submit report",
-                completionState: .pending,
+                notes: nil,
+                bucket: .required,
+                priority: .p1,
+                status: .pending,
+                sortOrder: 2,
                 completedAtServer: nil
             )
         ]

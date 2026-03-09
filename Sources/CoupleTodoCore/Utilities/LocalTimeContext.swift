@@ -38,4 +38,60 @@ public enum LocalTimeContextFactory {
             weekKey: String(format: "%04d-W%02d", yearForWeek, isoWeek)
         )
     }
+
+    public static func dateKey(
+        from date: Date,
+        calendar: Calendar = Calendar(identifier: .iso8601),
+        timezone: TimeZone = .current
+    ) -> String {
+        make(from: date, calendar: calendar, timezone: timezone).dateKey
+    }
+
+    public static func weekKey(
+        from date: Date,
+        calendar: Calendar = Calendar(identifier: .iso8601),
+        timezone: TimeZone = .current
+    ) -> String {
+        make(from: date, calendar: calendar, timezone: timezone).weekKey
+    }
+
+    public static func nextDateKey(
+        from date: Date,
+        calendar: Calendar = Calendar(identifier: .iso8601),
+        timezone: TimeZone = .current
+    ) -> String {
+        var calendar = calendar
+        calendar.timeZone = timezone
+        let nextDate = calendar.date(byAdding: .day, value: 1, to: date) ?? date
+        return dateKey(from: nextDate, calendar: calendar, timezone: timezone)
+    }
+
+    public static func nextWeekKey(
+        from date: Date,
+        calendar: Calendar = Calendar(identifier: .iso8601),
+        timezone: TimeZone = .current
+    ) -> String {
+        var calendar = calendar
+        calendar.timeZone = timezone
+        let nextWeekDate = calendar.date(byAdding: .day, value: 7, to: date) ?? date
+        return weekKey(from: nextWeekDate, calendar: calendar, timezone: timezone)
+    }
+
+    public static func startOfWeek(
+        from date: Date,
+        weekStartsOn: WeekStart,
+        calendar: Calendar = Calendar(identifier: .iso8601),
+        timezone: TimeZone = .current
+    ) -> Date {
+        var calendar = calendar
+        calendar.timeZone = timezone
+        calendar.firstWeekday = weekStartsOn == .monday ? 2 : 1
+
+        let components = calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)
+        let baseDate = calendar.date(from: components) ?? date
+        if weekStartsOn == .monday {
+            return baseDate
+        }
+        return calendar.date(byAdding: .day, value: -1, to: baseDate) ?? baseDate
+    }
 }

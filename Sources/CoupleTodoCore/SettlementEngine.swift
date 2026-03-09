@@ -20,7 +20,7 @@ public struct SettlementEngine: Sendable {
         }
 
         let requiredCompleted = requiredTasks.filter { task in
-            guard task.completionState == .completed,
+            guard task.status == .completed,
                   let completedAtServer = task.completedAtServer else {
                 return false
             }

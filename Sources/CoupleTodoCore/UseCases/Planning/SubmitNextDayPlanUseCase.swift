@@ -6,6 +6,7 @@ public struct SubmitNextDayPlanRequest: Sendable {
     public let submittedAt: Date
     public let now: Date
     public let timezone: TimeZone
+    public let planningWindowPolicy: PlanningWindowPolicy
     public let tasks: [TodoTask]
     public let noRequiredTasksConfirmed: Bool
 
@@ -15,6 +16,7 @@ public struct SubmitNextDayPlanRequest: Sendable {
         submittedAt: Date,
         now: Date,
         timezone: TimeZone,
+        planningWindowPolicy: PlanningWindowPolicy = .default,
         tasks: [TodoTask],
         noRequiredTasksConfirmed: Bool
     ) {
@@ -23,13 +25,18 @@ public struct SubmitNextDayPlanRequest: Sendable {
         self.submittedAt = submittedAt
         self.now = now
         self.timezone = timezone
+        self.planningWindowPolicy = planningWindowPolicy
         self.tasks = tasks
         self.noRequiredTasksConfirmed = noRequiredTasksConfirmed
     }
 }
 
 public enum SubmitNextDayPlanError: Error, Equatable {
-    case emptyTasksWithoutConfirmation
+    case emptyTasks
+    case missingRequiredTaskConfirmation
+    case submissionBeforeReminderTime(reminderTime: String, actualLocalTime: String)
+    case submissionAfterCutoffTime(cutoffTime: String, actualLocalTime: String)
+    case invalidPlanningWindow(reminderTime: String, cutoffTime: String)
     case taskBelongsToAnotherUser
     case taskDateKeyMismatch(expected: String, actual: String)
     case taskTimezoneMismatch(expected: String, actual: String)
@@ -46,10 +53,35 @@ public struct SubmitNextDayPlanUseCase: Sendable {
 
     @discardableResult
     public func execute(_ request: SubmitNextDayPlanRequest) async throws -> DailyPlan {
+        switch request.planningWindowPolicy.validate(submittedAt: request.submittedAt, timezone: request.timezone) {
+        case .withinWindow:
+            break
+        case let .beforeReminderTime(reminderTime, actualLocalTime):
+            throw SubmitNextDayPlanError.submissionBeforeReminderTime(
+                reminderTime: reminderTime,
+                actualLocalTime: actualLocalTime
+            )
+        case let .afterCutoffTime(cutoffTime, actualLocalTime):
+            throw SubmitNextDayPlanError.submissionAfterCutoffTime(
+                cutoffTime: cutoffTime,
+                actualLocalTime: actualLocalTime
+            )
+        case let .invalidPolicy(reminderTime, cutoffTime):
+            throw SubmitNextDayPlanError.invalidPlanningWindow(
+                reminderTime: reminderTime,
+                cutoffTime: cutoffTime
+            )
+        }
+
         let nextDayKey = DateKeyFactory.nextDateKey(from: request.now, timezone: request.timezone)
 
-        if request.tasks.isEmpty, request.noRequiredTasksConfirmed == false {
-            throw SubmitNextDayPlanError.emptyTasksWithoutConfirmation
+        if request.tasks.isEmpty {
+            throw SubmitNextDayPlanError.emptyTasks
+        }
+
+        let hasRequiredTask = request.tasks.contains(where: { $0.bucket == .required })
+        if hasRequiredTask == false, request.noRequiredTasksConfirmed == false {
+            throw SubmitNextDayPlanError.missingRequiredTaskConfirmation
         }
 
         for task in request.tasks {
@@ -65,6 +97,8 @@ public struct SubmitNextDayPlanUseCase: Sendable {
         }
 
         let planId = "\(request.userId)_\(nextDayKey)"
+        let requiredCount = request.tasks.filter { $0.bucket == .required && $0.deleted == false }.count
+        let optionalCount = request.tasks.filter { $0.bucket == .optional && $0.deleted == false }.count
         let plan = DailyPlan(
             id: planId,
             userId: request.userId,
@@ -72,7 +106,12 @@ public struct SubmitNextDayPlanUseCase: Sendable {
             dateKey: nextDayKey,
             localTimezone: request.timezone.identifier,
             submittedAt: request.submittedAt,
-            planningMissed: false
+            planningMissed: false,
+            localUtcOffsetMinutes: request.timezone.secondsFromGMT(for: request.submittedAt) / 60,
+            lastEditedAt: request.submittedAt,
+            requiredCount: requiredCount,
+            optionalCount: optionalCount,
+            version: 1
         )
 
         try await planRepository.upsertPlan(plan)

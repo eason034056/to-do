@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isCoupleMember(coupleId) {
+      return isSignedIn()
+        && request.auth.uid in get(/databases/$(database)/documents/couples/$(coupleId)).data.memberIds;
+    }
+
+    match /users/{userId} {
+      allow read, write: if isSelf(userId);
+    }
+
+    match /deviceInstallations/{installationId} {
+      allow read, write: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+    }
+
+    match /couples/{coupleId} {
+      allow read: if isCoupleMember(coupleId);
+      allow write: if false;
+
+      match /plans/{planId} {
+        allow read: if isCoupleMember(coupleId);
+        allow write: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+
+        match /tasks/{taskId} {
+          allow read: if isCoupleMember(coupleId);
+          allow write: if isSignedIn() && request.auth.uid == request.resource.data.ownerUserId;
+        }
+      }
+
+      match /settlements/{settlementId} {
+        allow read: if isCoupleMember(coupleId);
+        allow write: if false;
+      }
+
+      match /rewardWeeks/{weekKey} {
+        allow read: if isCoupleMember(coupleId);
+        allow write: if false;
+      }
+
+      match /events/{eventId} {
+        allow read: if isCoupleMember(coupleId);
+        allow write: if false;
+      }
+    }
+  }
+}

@@ -1,13 +1,16 @@
 # Couple To-Do
 
-Phase 1 baseline for the iOS couple to-do app.
+Foundation baseline for the iOS couple to-do app.
 
 ## What is included
 - Swift Package core module: `CoupleTodoCore`
-- Domain models for tasks/plans/settlement/reward
+- Expanded domain models for users/couples/tasks/plans/settlement/reward/events/shared snapshot
 - Local timezone/day/week context utility
 - Task sorting service (required > optional, then priority/order)
-- Unit tests for cross-timezone date/week logic and task ordering
+- Use cases for planning, dashboard loading, couple lifecycle, settlement, rewards, and task mutation
+- SwiftUI app shell with routing, deep links, planning/settlement/rewards/settings surfaces
+- Demo in-memory repositories that make the app shell runnable without Firebase
+- Backend skeleton under `Backend/` for Firebase Functions and Firestore rules
 
 ## Run tests
 ```bash
@@ -16,12 +19,14 @@ swift test
 
 ## Open in Xcode
 ```bash
-open Package.swift
+xcodegen generate
+open CoupleTodo.xcodeproj
 ```
 
 > The existing `IOS_COUPLE_TODO_APP_DEVELOPMENT_SPEC.md` remains the source of truth for product and backend rules.
 
 
-## Phase 2 status
-- Planning domain kickoff implemented: repository protocols and `SubmitNextDayPlanUseCase`.
-- See `docs/PHASE2_IMPLEMENTATION.md` for details and next steps.
+## Current status
+- `CoupleTodoCore` is the shared source of truth for domain models and core use cases.
+- `App/` now imports `CoupleTodoCore` directly and no longer carries duplicate domain models.
+- `Backend/` contains the initial Firebase project layout, callable/scheduled function names, and Firestore rules scaffold.
