@@ -18,7 +18,9 @@ public struct SaveNextWeekRewardRequest: Sendable {
 
 public enum SaveNextWeekRewardError: Error, Equatable {
     case coupleNotFound
+    case forbidden
     case emptyRewardText
+    case rewardLocked
 }
 
 public struct SaveNextWeekRewardUseCase: Sendable {
@@ -45,6 +47,9 @@ public struct SaveNextWeekRewardUseCase: Sendable {
         guard let couple = try await coupleRepository.fetchCouple(coupleId: request.coupleId) else {
             throw SaveNextWeekRewardError.coupleNotFound
         }
+        guard couple.memberIds.contains(request.actorUserId) else {
+            throw SaveNextWeekRewardError.forbidden
+        }
 
         let currentWeekKey = LocalTimeContextFactory.weekKey(from: request.now, timezone: request.timezone)
         let nextWeekKey = LocalTimeContextFactory.nextWeekKey(from: request.now, timezone: request.timezone)
@@ -70,6 +75,9 @@ public struct SaveNextWeekRewardUseCase: Sendable {
             memberLocalWeekKeys: [:],
             updatedAt: request.now
         )
+        guard rewardWeek.status == .draft else {
+            throw SaveNextWeekRewardError.rewardLocked
+        }
 
         rewardWeek.rewardText = trimmedRewardText
         rewardWeek.draftedInWeekKey = currentWeekKey

@@ -29,6 +29,24 @@ struct SettlementView: View {
                         }
                     }
 
+                    let settlementPayments = coordinator.paymentRecords.filter { $0.sourceDateKey == settlement.dateKey }
+                    if settlementPayments.isEmpty == false {
+                        Section("Related Payments") {
+                            ForEach(settlementPayments) { payment in
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text("\(NSDecimalNumber(decimal: payment.amount).stringValue) \(payment.currency)")
+                                    Text("Status: \(payment.status.rawValue)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Button("Open Payment") {
+                                        coordinator.navigate(to: .payment(recordId: payment.id))
+                                    }
+                                    .buttonStyle(.bordered)
+                                }
+                            }
+                        }
+                    }
+
                     Section {
                         Button("Acknowledge") {
                             Task {
@@ -36,6 +54,11 @@ struct SettlementView: View {
                             }
                         }
                         .buttonStyle(.borderedProminent)
+
+                        Button("Open Settlement History") {
+                            coordinator.navigate(to: .settlementHistory)
+                        }
+                        .buttonStyle(.bordered)
                     }
                 }
                 .navigationTitle("Settlement")

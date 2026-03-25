@@ -10,8 +10,12 @@ enum DeepLinkRouter {
             return components.first.map { .planning(dateKey: $0) }
         case "settlement":
             return components.first.map { .settlement(dateKey: $0) }
+        case "settlement-history":
+            return .settlementHistory
         case "rewards":
             return components.first.map { .rewards(weekKey: $0) }
+        case "payments":
+            return components.first.map { .payment(recordId: $0) }
         case "settings":
             return .settings
         case "pairing":

@@ -82,6 +82,38 @@ struct SettingsView: View {
                         .pickerStyle(.segmented)
                     }
 
+                    Section("Notifications") {
+                        Text("System permission: \(coordinator.settingsDraft?.notificationPermissionStatus ?? settingsDraft.notificationPermissionStatus)")
+                            .foregroundStyle(.secondary)
+                        Toggle(
+                            "Planning reminder enabled",
+                            isOn: Binding(
+                                get: { coordinator.settingsDraft?.planningReminderEnabled ?? settingsDraft.planningReminderEnabled },
+                                set: { coordinator.settingsDraft?.planningReminderEnabled = $0 }
+                            )
+                        )
+                        Toggle(
+                            "Settlement reminder enabled",
+                            isOn: Binding(
+                                get: { coordinator.settingsDraft?.settlementReminderEnabled ?? settingsDraft.settlementReminderEnabled },
+                                set: { coordinator.settingsDraft?.settlementReminderEnabled = $0 }
+                            )
+                        )
+                        Toggle(
+                            "Time Sensitive allowed",
+                            isOn: Binding(
+                                get: { coordinator.settingsDraft?.timeSensitiveAllowed ?? settingsDraft.timeSensitiveAllowed },
+                                set: { coordinator.settingsDraft?.timeSensitiveAllowed = $0 }
+                            )
+                        )
+                    }
+
+                    Section("Device Timezone Sync") {
+                        Text("Timezone: \(coordinator.settingsDraft?.deviceTimezone ?? settingsDraft.deviceTimezone)")
+                        Text("UTC offset: \(coordinator.settingsDraft?.deviceUtcOffsetMinutes ?? settingsDraft.deviceUtcOffsetMinutes) min")
+                            .foregroundStyle(.secondary)
+                    }
+
                     Section {
                         Button("Save Settings") {
                             Task {

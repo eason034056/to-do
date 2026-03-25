@@ -7,43 +7,103 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22DBE3CBE9837393B0D0BD84 /* SharedSnapshotReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D00C8D8ACE4787E5271A056 /* SharedSnapshotReader.swift */; };
+		275DFA9F697745D7D0F3373B /* CoupleTodoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D7DD08819DE2EDCC1BBEC445 /* CoupleTodoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		31E4BACC7AAFEBE11D9AC379 /* InMemoryRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01B8FAE5CF89513E7B61D7 /* InMemoryRepositories.swift */; };
+		32518095D899D39C58F3B638 /* DailySettlementActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A11E2B0B9723D81E2311F70 /* DailySettlementActivity.swift */; };
 		4A032ADDA5EA885D47CC9E4D /* RewardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9F33E6949BA44CDE62FE4 /* RewardsView.swift */; };
+		4C21F8C74B78F058299133D8 /* PlanningReminderActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 870009AACCE5636E9893D680 /* PlanningReminderActivity.swift */; };
 		4EC56B20B70277FFA473ACDF /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD54F2A18FCB6541AFE5ACB /* AppRoute.swift */; };
 		5492F137C87460D32CE6D80C /* SettlementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA317ABD7F56B8F827B5A8DC /* SettlementView.swift */; };
 		6460C32C255051FB54C02FE7 /* PlanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F56C09285AFB12CDEF6229 /* PlanningView.swift */; };
 		744381513445BA8E175FAFFB /* CoupleTodoCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9ECC0F2354AD194C7476393F /* CoupleTodoCore */; };
 		75AFB9CC11563BCFCDAC8B54 /* DemoAppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509747D19F1B33B98BD1D /* DemoAppEnvironment.swift */; };
+		8061C2F3B88BB169AA263AE0 /* FirebaseAuthenticationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2EC61AC2FC42DF07988B08C /* FirebaseAuthenticationServiceTests.swift */; };
+		82E9E00DBBCF396983AE4602 /* AppCoordinatorAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F37B79BE17EBB33DF75718E /* AppCoordinatorAuthTests.swift */; };
 		9FFDC2E1033E73C0B9100252 /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F9B5A6C1E521573DBFAB54 /* PairingView.swift */; };
 		A16D156D7992777A0B1E68BB /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C92AA06882DB675B50BCBB /* DashboardView.swift */; };
+		A1B249F3AA52603B100CC834 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C1B50DBAD40124CE8ECE122 /* GoogleService-Info.plist */; };
 		A40DF860D79F7343FFA942E6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7585BA38B87A3C09D055E3 /* RootView.swift */; };
 		A78525E89D5BEDC59BBBDA3D /* TaskEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D791394AF906C721B0BA6BA /* TaskEditorView.swift */; };
+		AF18BD13228E48607275F971 /* CoupleTodoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76D6658B6634C10EC78FF81 /* CoupleTodoWidget.swift */; };
 		B6DAE817989E164E8A102EA4 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F326BFA7D7B4C4CCE33C85 /* AppCoordinator.swift */; };
+		B8664ECF73369AF2EBDAB1D7 /* CoupleTodoFirebase in Frameworks */ = {isa = PBXBuildFile; productRef = 012EE7B8990696D00F929D8E /* CoupleTodoFirebase */; };
+		BADC1770C63F1CA2864DFFAF /* CoupleTodoAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036A09A218C18FC2B4459A33 /* CoupleTodoAppIntents.swift */; };
 		BE492CB72C9E02BAA788126D /* DeepLinkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853A1FC474CF94D032721496 /* DeepLinkRouter.swift */; };
+		C086123786B6128B60D12892 /* SettlementHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213C11857BEFCA96D0373225 /* SettlementHistoryView.swift */; };
 		C16BDB8AFD4AB45F2D6DE18D /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5BA60C46FC959725EA4A5F /* AuthView.swift */; };
+		CCF3836A749020D45AB08E21 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62C0A1A47970B8450D80047 /* NotificationService.swift */; };
 		D4C413F391ED18CFF51F9447 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF749D9CF9B9F2AE48405B1 /* SettingsView.swift */; };
+		D853ADFCF96765E28371E2EC /* CoupleTodoCore in Frameworks */ = {isa = PBXBuildFile; productRef = E0B7766AAED04BFA31219462 /* CoupleTodoCore */; };
 		E9255D92C178830AD701A23E /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA9A2B76E1F281759802E1C /* AppMain.swift */; };
+		ECB70AC2A586C0248A3A79C4 /* PaymentAcknowledgementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75569C4B652CAA4E692B4F01 /* PaymentAcknowledgementView.swift */; };
 		EFAD51D378FCA86AD40FC121 /* SharedSnapshotWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D2DB83562C4B80513A51CE /* SharedSnapshotWriter.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3B8FECA0686A350018BB6240 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1319402EBED9253CFAAF52D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B0E86686A477A1745C94F74;
+			remoteInfo = CoupleTodo;
+		};
+		71A492B5CD634BFAEEFF526D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1319402EBED9253CFAAF52D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 513A20429C057CB61D3ED934;
+			remoteInfo = CoupleTodoWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DDC43E404DE2258C77D36481 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				275DFA9F697745D7D0F3373B /* CoupleTodoWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		036A09A218C18FC2B4459A33 /* CoupleTodoAppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleTodoAppIntents.swift; sourceTree = "<group>"; };
+		0D00C8D8ACE4787E5271A056 /* SharedSnapshotReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSnapshotReader.swift; sourceTree = "<group>"; };
 		154BDCF054F285B6DC7EB31D /* CoupleTodo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CoupleTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AD54F2A18FCB6541AFE5ACB /* AppRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
+		1C1B50DBAD40124CE8ECE122 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		213C11857BEFCA96D0373225 /* SettlementHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementHistoryView.swift; sourceTree = "<group>"; };
 		2AA9F33E6949BA44CDE62FE4 /* RewardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardsView.swift; sourceTree = "<group>"; };
 		2AB509747D19F1B33B98BD1D /* DemoAppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAppEnvironment.swift; sourceTree = "<group>"; };
 		2CF749D9CF9B9F2AE48405B1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		38F9B5A6C1E521573DBFAB54 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
+		3A11E2B0B9723D81E2311F70 /* DailySettlementActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailySettlementActivity.swift; sourceTree = "<group>"; };
 		45F326BFA7D7B4C4CCE33C85 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		56B96CFAEE79508EF67FC72D /* to-do */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "to-do"; path = .; sourceTree = SOURCE_ROOT; };
 		5D01B8FAE5CF89513E7B61D7 /* InMemoryRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryRepositories.swift; sourceTree = "<group>"; };
+		5F37B79BE17EBB33DF75718E /* AppCoordinatorAuthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinatorAuthTests.swift; sourceTree = "<group>"; };
 		6C7585BA38B87A3C09D055E3 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		75569C4B652CAA4E692B4F01 /* PaymentAcknowledgementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAcknowledgementView.swift; sourceTree = "<group>"; };
+		78393C8499FCD492088510D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		853A1FC474CF94D032721496 /* DeepLinkRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRouter.swift; sourceTree = "<group>"; };
+		870009AACCE5636E9893D680 /* PlanningReminderActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanningReminderActivity.swift; sourceTree = "<group>"; };
 		8D791394AF906C721B0BA6BA /* TaskEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorView.swift; sourceTree = "<group>"; };
 		9C5BA60C46FC959725EA4A5F /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		9DA287294C2DF3ECDA6604E0 /* CoupleTodoWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CoupleTodoWidget.entitlements; sourceTree = "<group>"; };
 		A0C92AA06882DB675B50BCBB /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		A8F56C09285AFB12CDEF6229 /* PlanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanningView.swift; sourceTree = "<group>"; };
 		B6B72DCDAB9A3DA8D803F37E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B76D6658B6634C10EC78FF81 /* CoupleTodoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleTodoWidget.swift; sourceTree = "<group>"; };
+		BFADF512AB01B6CFDC20F6DC /* CoupleTodoAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CoupleTodoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D2DB83562C4B80513A51CE /* SharedSnapshotWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSnapshotWriter.swift; sourceTree = "<group>"; };
+		D62C0A1A47970B8450D80047 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		D7DD08819DE2EDCC1BBEC445 /* CoupleTodoWidgetExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = CoupleTodoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2EC61AC2FC42DF07988B08C /* FirebaseAuthenticationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthenticationServiceTests.swift; sourceTree = "<group>"; };
 		F2439FEC492625F2F6F82FC1 /* CoupleTodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CoupleTodo.entitlements; sourceTree = "<group>"; };
 		FA317ABD7F56B8F827B5A8DC /* SettlementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementView.swift; sourceTree = "<group>"; };
 		FFA9A2B76E1F281759802E1C /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
@@ -55,6 +115,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				744381513445BA8E175FAFFB /* CoupleTodoCore in Frameworks */,
+				B8664ECF73369AF2EBDAB1D7 /* CoupleTodoFirebase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		970EAC6CC9554DA2571E130D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D853ADFCF96765E28371E2EC /* CoupleTodoCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +150,9 @@
 			isa = PBXGroup;
 			children = (
 				10D3CE7CBB91626CC70F7CE8 /* AppGroup */,
+				736D65D6A7BBF9EFBF767DEA /* AppIntents */,
+				5E633BEF40AAEA00128F429E /* LiveActivity */,
+				91A3B856A31718322412F8E8 /* Notifications */,
 			);
 			path = Platform;
 			sourceTree = "<group>";
@@ -88,6 +160,8 @@
 		379C97306EE5CAE4004BCB54 /* Settlement */ = {
 			isa = PBXGroup;
 			children = (
+				75569C4B652CAA4E692B4F01 /* PaymentAcknowledgementView.swift */,
+				213C11857BEFCA96D0373225 /* SettlementHistoryView.swift */,
 				FA317ABD7F56B8F827B5A8DC /* SettlementView.swift */,
 			);
 			path = Settlement;
@@ -135,6 +209,15 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		5E633BEF40AAEA00128F429E /* LiveActivity */ = {
+			isa = PBXGroup;
+			children = (
+				3A11E2B0B9723D81E2311F70 /* DailySettlementActivity.swift */,
+				870009AACCE5636E9893D680 /* PlanningReminderActivity.swift */,
+			);
+			path = LiveActivity;
+			sourceTree = "<group>";
+		};
 		6C6E1CB7C03F5AC42861B9E7 /* Features */ = {
 			isa = PBXGroup;
 			children = (
@@ -148,6 +231,14 @@
 				F45E72551479C915983C1571 /* Tasks */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		736D65D6A7BBF9EFBF767DEA /* AppIntents */ = {
+			isa = PBXGroup;
+			children = (
+				036A09A218C18FC2B4459A33 /* CoupleTodoAppIntents.swift */,
+			);
+			path = AppIntents;
 			sourceTree = "<group>";
 		};
 		8D00F73F9E79F567D1E9A325 /* Environment */ = {
@@ -167,6 +258,14 @@
 			path = Dashboard;
 			sourceTree = "<group>";
 		};
+		91A3B856A31718322412F8E8 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				D62C0A1A47970B8450D80047 /* NotificationService.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
 		A923CADAC8CAF78D82389926 /* Core */ = {
 			isa = PBXGroup;
 			children = (
@@ -174,13 +273,43 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
+		BFE0BF2954CDB3D5F1F32DA4 /* CoupleTodoWidget */ = {
+			isa = PBXGroup;
+			children = (
+				9DA287294C2DF3ECDA6604E0 /* CoupleTodoWidget.entitlements */,
+				B76D6658B6634C10EC78FF81 /* CoupleTodoWidget.swift */,
+				78393C8499FCD492088510D5 /* Info.plist */,
+				0D00C8D8ACE4787E5271A056 /* SharedSnapshotReader.swift */,
+			);
+			path = CoupleTodoWidget;
+			sourceTree = "<group>";
+		};
 		C17E2175FF4A2380BDF66FFD = {
 			isa = PBXGroup;
 			children = (
 				E50884A8DD59A64311F2740E /* App */,
+				BFE0BF2954CDB3D5F1F32DA4 /* CoupleTodoWidget */,
 				D0A2FD04B9E82DC61A0BC1AF /* Packages */,
+				CE071F09A224BB50425BC00F /* Tests */,
 				EEDC2755DBBDAA3B2468B466 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		C53765494359381B55D46D63 /* CoupleTodoAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				5F37B79BE17EBB33DF75718E /* AppCoordinatorAuthTests.swift */,
+				E2EC61AC2FC42DF07988B08C /* FirebaseAuthenticationServiceTests.swift */,
+			);
+			path = CoupleTodoAppTests;
+			sourceTree = "<group>";
+		};
+		CE071F09A224BB50425BC00F /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				C53765494359381B55D46D63 /* CoupleTodoAppTests */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 		CE72FF70C916653796149E63 /* Auth */ = {
@@ -204,6 +333,7 @@
 			children = (
 				45F326BFA7D7B4C4CCE33C85 /* AppCoordinator.swift */,
 				FFA9A2B76E1F281759802E1C /* AppMain.swift */,
+				1C1B50DBAD40124CE8ECE122 /* GoogleService-Info.plist */,
 				6C7585BA38B87A3C09D055E3 /* RootView.swift */,
 				A923CADAC8CAF78D82389926 /* Core */,
 				8D00F73F9E79F567D1E9A325 /* Environment */,
@@ -219,6 +349,8 @@
 			isa = PBXGroup;
 			children = (
 				154BDCF054F285B6DC7EB31D /* CoupleTodo.app */,
+				BFADF512AB01B6CFDC20F6DC /* CoupleTodoAppTests.xctest */,
+				D7DD08819DE2EDCC1BBEC445 /* CoupleTodoWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -234,24 +366,65 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1BF1A44C963C31A8EE188947 /* CoupleTodoAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D72DE32AB3765F8D0E4CC3A /* Build configuration list for PBXNativeTarget "CoupleTodoAppTests" */;
+			buildPhases = (
+				FD38B786167E4F2249EDACA9 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2AEC6F7BADAA13F62923E28D /* PBXTargetDependency */,
+			);
+			name = CoupleTodoAppTests;
+			packageProductDependencies = (
+			);
+			productName = CoupleTodoAppTests;
+			productReference = BFADF512AB01B6CFDC20F6DC /* CoupleTodoAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		4B0E86686A477A1745C94F74 /* CoupleTodo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A3BA712D5167A9DAEEB48B02 /* Build configuration list for PBXNativeTarget "CoupleTodo" */;
 			buildPhases = (
 				F3D89CD664E0F0F9003FBE18 /* Sources */,
+				9B5D09BF30F77B185F593680 /* Resources */,
 				1FF789053A003F9556666861 /* Frameworks */,
+				DDC43E404DE2258C77D36481 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C5291A4C59DA2C5954196475 /* PBXTargetDependency */,
+			);
+			name = CoupleTodo;
+			packageProductDependencies = (
+				9ECC0F2354AD194C7476393F /* CoupleTodoCore */,
+				012EE7B8990696D00F929D8E /* CoupleTodoFirebase */,
+			);
+			productName = CoupleTodo;
+			productReference = 154BDCF054F285B6DC7EB31D /* CoupleTodo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		513A20429C057CB61D3ED934 /* CoupleTodoWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EFBEA8AD1AB625321C395AA2 /* Build configuration list for PBXNativeTarget "CoupleTodoWidgetExtension" */;
+			buildPhases = (
+				3E4D7DC747B1B51828472AD4 /* Sources */,
+				970EAC6CC9554DA2571E130D /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = CoupleTodo;
+			name = CoupleTodoWidgetExtension;
 			packageProductDependencies = (
-				9ECC0F2354AD194C7476393F /* CoupleTodoCore */,
+				E0B7766AAED04BFA31219462 /* CoupleTodoCore */,
 			);
-			productName = CoupleTodo;
-			productReference = 154BDCF054F285B6DC7EB31D /* CoupleTodo.app */;
-			productType = "com.apple.product-type.application";
+			productName = CoupleTodoWidgetExtension;
+			productReference = D7DD08819DE2EDCC1BBEC445 /* CoupleTodoWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -282,11 +455,33 @@
 			projectRoot = "";
 			targets = (
 				4B0E86686A477A1745C94F74 /* CoupleTodo */,
+				1BF1A44C963C31A8EE188947 /* CoupleTodoAppTests */,
+				513A20429C057CB61D3ED934 /* CoupleTodoWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		9B5D09BF30F77B185F593680 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1B249F3AA52603B100CC834 /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		3E4D7DC747B1B51828472AD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AF18BD13228E48607275F971 /* CoupleTodoWidget.swift in Sources */,
+				22DBE3CBE9837393B0D0BD84 /* SharedSnapshotReader.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F3D89CD664E0F0F9003FBE18 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -295,24 +490,71 @@
 				E9255D92C178830AD701A23E /* AppMain.swift in Sources */,
 				4EC56B20B70277FFA473ACDF /* AppRoute.swift in Sources */,
 				C16BDB8AFD4AB45F2D6DE18D /* AuthView.swift in Sources */,
+				BADC1770C63F1CA2864DFFAF /* CoupleTodoAppIntents.swift in Sources */,
+				32518095D899D39C58F3B638 /* DailySettlementActivity.swift in Sources */,
 				A16D156D7992777A0B1E68BB /* DashboardView.swift in Sources */,
 				BE492CB72C9E02BAA788126D /* DeepLinkRouter.swift in Sources */,
 				75AFB9CC11563BCFCDAC8B54 /* DemoAppEnvironment.swift in Sources */,
 				31E4BACC7AAFEBE11D9AC379 /* InMemoryRepositories.swift in Sources */,
+				CCF3836A749020D45AB08E21 /* NotificationService.swift in Sources */,
 				9FFDC2E1033E73C0B9100252 /* PairingView.swift in Sources */,
+				ECB70AC2A586C0248A3A79C4 /* PaymentAcknowledgementView.swift in Sources */,
+				4C21F8C74B78F058299133D8 /* PlanningReminderActivity.swift in Sources */,
 				6460C32C255051FB54C02FE7 /* PlanningView.swift in Sources */,
 				4A032ADDA5EA885D47CC9E4D /* RewardsView.swift in Sources */,
 				A40DF860D79F7343FFA942E6 /* RootView.swift in Sources */,
 				D4C413F391ED18CFF51F9447 /* SettingsView.swift in Sources */,
+				C086123786B6128B60D12892 /* SettlementHistoryView.swift in Sources */,
 				5492F137C87460D32CE6D80C /* SettlementView.swift in Sources */,
 				EFAD51D378FCA86AD40FC121 /* SharedSnapshotWriter.swift in Sources */,
 				A78525E89D5BEDC59BBBDA3D /* TaskEditorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FD38B786167E4F2249EDACA9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				82E9E00DBBCF396983AE4602 /* AppCoordinatorAuthTests.swift in Sources */,
+				8061C2F3B88BB169AA263AE0 /* FirebaseAuthenticationServiceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		2AEC6F7BADAA13F62923E28D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B0E86686A477A1745C94F74 /* CoupleTodo */;
+			targetProxy = 3B8FECA0686A350018BB6240 /* PBXContainerItemProxy */;
+		};
+		C5291A4C59DA2C5954196475 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 513A20429C057CB61D3ED934 /* CoupleTodoWidgetExtension */;
+			targetProxy = 71A492B5CD634BFAEEFF526D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		164678420EA8C0BD510F155C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.CoupleTodoAppTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CoupleTodo.app/CoupleTodo";
+			};
+			name = Debug;
+		};
 		25421F9887686F7E4C753A7E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -369,6 +611,65 @@
 			};
 			name = Release;
 		};
+		3487937063D5537A36FD13A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = CoupleTodoWidget/CoupleTodoWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = CoupleTodoWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.app.widget;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		348A969DDB668B14279DAE1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = CoupleTodoWidget/CoupleTodoWidget.entitlements;
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = CoupleTodoWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.app.widget;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		36ACF1BED7D923C8989B3DD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.CoupleTodoAppTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CoupleTodo.app/CoupleTodo";
+			};
+			name = Release;
+		};
 		AB2A91965BBA6CD6291A037D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -386,6 +687,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "$(inherited) -ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.app;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -410,6 +712,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "$(inherited) -ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.app;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -483,6 +786,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6D72DE32AB3765F8D0E4CC3A /* Build configuration list for PBXNativeTarget "CoupleTodoAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				164678420EA8C0BD510F155C /* Debug */,
+				36ACF1BED7D923C8989B3DD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		9E92419D1BDD0460D096FC1D /* Build configuration list for PBXProject "CoupleTodo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -501,6 +813,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		EFBEA8AD1AB625321C395AA2 /* Build configuration list for PBXNativeTarget "CoupleTodoWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				348A969DDB668B14279DAE1E /* Debug */,
+				3487937063D5537A36FD13A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -511,7 +832,15 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		012EE7B8990696D00F929D8E /* CoupleTodoFirebase */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CoupleTodoFirebase;
+		};
 		9ECC0F2354AD194C7476393F /* CoupleTodoCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CoupleTodoCore;
+		};
+		E0B7766AAED04BFA31219462 /* CoupleTodoCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CoupleTodoCore;
 		};

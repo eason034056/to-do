@@ -5,7 +5,11 @@ final class TaskMutationUseCasesTests: XCTestCase {
     func testCreateTaskStoresTaskAndEvent() async throws {
         let taskRepository = TestTaskRepository()
         let eventRepository = TestEventRepository()
-        let useCase = CreateTaskUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        let useCase = CreateTaskUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: TestSettlementRepository(),
+            eventRepository: eventRepository
+        )
         let now = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-03-09T03:00:00Z"))
 
         let task = TodoTask(
@@ -42,7 +46,11 @@ final class TaskMutationUseCasesTests: XCTestCase {
     func testUpdateTaskRejectsCrossUserMutation() async throws {
         let taskRepository = TestTaskRepository()
         let eventRepository = TestEventRepository()
-        let useCase = UpdateTaskUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        let useCase = UpdateTaskUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: TestSettlementRepository(),
+            eventRepository: eventRepository
+        )
 
         let task = TodoTask(
             id: "task_1",
@@ -91,7 +99,11 @@ final class TaskMutationUseCasesTests: XCTestCase {
 
         let taskRepository = TestTaskRepository(seed: ["usr_1_2026-03-09": [task]])
         let eventRepository = TestEventRepository()
-        let useCase = ToggleTaskCompletionUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        let useCase = ToggleTaskCompletionUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: TestSettlementRepository(),
+            eventRepository: eventRepository
+        )
 
         let updated = try await useCase.execute(
             ToggleTaskCompletionRequest(
@@ -128,7 +140,11 @@ final class TaskMutationUseCasesTests: XCTestCase {
 
         let taskRepository = TestTaskRepository(seed: ["usr_1_2026-03-09": [task]])
         let eventRepository = TestEventRepository()
-        let useCase = DeleteTaskUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        let useCase = DeleteTaskUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: TestSettlementRepository(),
+            eventRepository: eventRepository
+        )
 
         try await useCase.execute(
             DeleteTaskRequest(
@@ -175,7 +191,11 @@ final class TaskMutationUseCasesTests: XCTestCase {
 
         let taskRepository = TestTaskRepository(seed: ["usr_1_2026-03-09": [taskA, taskB]])
         let eventRepository = TestEventRepository()
-        let useCase = ReorderTasksUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        let useCase = ReorderTasksUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: TestSettlementRepository(),
+            eventRepository: eventRepository
+        )
 
         try await useCase.execute(
             ReorderTasksRequest(
@@ -190,5 +210,68 @@ final class TaskMutationUseCasesTests: XCTestCase {
         let stored = try await taskRepository.fetchTasks(userId: "usr_1", dateKey: "2026-03-09")
         XCTAssertEqual(stored.map(\.id), ["task_b", "task_a"])
         XCTAssertEqual(stored.map(\.sortOrder), [1000, 2000])
+    }
+
+    func testCreateTaskRejectsMutationAfterDailySettlementFinalized() async throws {
+        let now = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-03-09T04:00:00Z"))
+        let taskRepository = TestTaskRepository()
+        let eventRepository = TestEventRepository()
+        let settlementRepository = TestSettlementRepository(
+            seed: [
+                DailySettlement(
+                    id: "usr_1_2026-03-09",
+                    coupleId: "cpl_1",
+                    subjectUserId: "usr_1",
+                    counterpartyUserId: "usr_2",
+                    dateKey: "2026-03-09",
+                    localTimezone: "UTC",
+                    localWeekKey: "2026-W11",
+                    state: .finalized,
+                    computedAt: now,
+                    graceAppliedUntil: now,
+                    subjectResult: SettlementResult(
+                        requiredTotal: 1,
+                        requiredCompleted: 1,
+                        missedRequiredCount: 0,
+                        outcome: .pass,
+                        owesAmount: 0
+                    ),
+                    pendingAcknowledgementUserIds: []
+                )
+            ]
+        )
+        let useCase = CreateTaskUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: settlementRepository,
+            eventRepository: eventRepository
+        )
+
+        let task = TodoTask(
+            id: "task_1",
+            ownerUserId: "usr_1",
+            dateKey: "2026-03-09",
+            localTimezone: "UTC",
+            title: "Late task",
+            notes: nil,
+            bucket: .required,
+            priority: .p0,
+            status: .pending,
+            sortOrder: 1000,
+            completedAtServer: nil
+        )
+
+        do {
+            _ = try await useCase.execute(
+                CreateTaskRequest(
+                    actorUserId: "usr_1",
+                    coupleId: "cpl_1",
+                    task: task,
+                    now: now
+                )
+            )
+            XCTFail("Expected locked-day rejection")
+        } catch let error as TaskMutationError {
+            XCTAssertEqual(error, .dayLockedByFinalizedSettlement(dateKey: "2026-03-09"))
+        }
     }
 }

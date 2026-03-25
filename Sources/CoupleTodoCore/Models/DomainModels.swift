@@ -509,6 +509,64 @@ public struct RewardWeek: Identifiable, Codable, Sendable, Equatable {
 
 public typealias WeekReward = RewardWeek
 
+public enum PaymentStatus: String, Codable, CaseIterable, Sendable {
+    case pending
+    case acknowledged
+    case disputed
+}
+
+public struct PaymentRecord: Identifiable, Codable, Sendable, Equatable {
+    public let id: String
+    public let coupleId: String
+    public var debtorUserId: String
+    public var creditorUserId: String
+    public var sourceSettlementId: String
+    public var sourceDateKey: String
+    public var amount: Decimal
+    public var currency: String
+    public var status: PaymentStatus
+    public var markedPaidAt: Date?
+    public var acknowledgedAt: Date?
+    public var disputedAt: Date?
+    public var markedByUserId: String?
+    public var acknowledgedByUserId: String?
+    public var updatedAt: Date
+
+    public init(
+        id: String,
+        coupleId: String,
+        debtorUserId: String,
+        creditorUserId: String,
+        sourceSettlementId: String,
+        sourceDateKey: String,
+        amount: Decimal,
+        currency: String,
+        status: PaymentStatus = .pending,
+        markedPaidAt: Date? = nil,
+        acknowledgedAt: Date? = nil,
+        disputedAt: Date? = nil,
+        markedByUserId: String? = nil,
+        acknowledgedByUserId: String? = nil,
+        updatedAt: Date
+    ) {
+        self.id = id
+        self.coupleId = coupleId
+        self.debtorUserId = debtorUserId
+        self.creditorUserId = creditorUserId
+        self.sourceSettlementId = sourceSettlementId
+        self.sourceDateKey = sourceDateKey
+        self.amount = amount
+        self.currency = currency
+        self.status = status
+        self.markedPaidAt = markedPaidAt
+        self.acknowledgedAt = acknowledgedAt
+        self.disputedAt = disputedAt
+        self.markedByUserId = markedByUserId
+        self.acknowledgedByUserId = acknowledgedByUserId
+        self.updatedAt = updatedAt
+    }
+}
+
 public enum EventLogType: String, Codable, CaseIterable, Sendable {
     case taskCreated = "task_created"
     case taskUpdated = "task_updated"
@@ -521,6 +579,8 @@ public enum EventLogType: String, Codable, CaseIterable, Sendable {
     case weeklyRewardDrafted = "weekly_reward_drafted"
     case weeklyRewardEarned = "weekly_reward_earned"
     case weeklyRewardMissed = "weekly_reward_missed"
+    case settlementAcknowledged = "settlement_acknowledged"
+    case paymentMarkedPaid = "payment_marked_paid"
 }
 
 public struct EventLogEntry: Identifiable, Codable, Sendable, Equatable {
@@ -617,16 +677,49 @@ public struct SharedSnapshot: Codable, Sendable, Equatable {
         }
     }
 
+    public struct RewardSnapshot: Codable, Sendable, Equatable {
+        public var weekKey: String
+        public var rewardText: String
+        public var status: String
+
+        public init(weekKey: String, rewardText: String, status: String) {
+            self.weekKey = weekKey
+            self.rewardText = rewardText
+            self.status = status
+        }
+    }
+
+    public struct PaymentSummary: Codable, Sendable, Equatable {
+        public var pendingCount: Int
+        public var totalPendingAmount: Decimal
+
+        public init(pendingCount: Int, totalPendingAmount: Decimal) {
+            self.pendingCount = pendingCount
+            self.totalPendingAmount = totalPendingAmount
+        }
+    }
+
     public var generatedAt: Date
     public var today: TodaySnapshot
     public var planning: PlanningSnapshot
     public var settlement: SettlementSnapshot
+    public var reward: RewardSnapshot?
+    public var payments: PaymentSummary?
 
-    public init(generatedAt: Date, today: TodaySnapshot, planning: PlanningSnapshot, settlement: SettlementSnapshot) {
+    public init(
+        generatedAt: Date,
+        today: TodaySnapshot,
+        planning: PlanningSnapshot,
+        settlement: SettlementSnapshot,
+        reward: RewardSnapshot? = nil,
+        payments: PaymentSummary? = nil
+    ) {
         self.generatedAt = generatedAt
         self.today = today
         self.planning = planning
         self.settlement = settlement
+        self.reward = reward
+        self.payments = payments
     }
 }
 

@@ -153,6 +153,66 @@ actor TestRewardWeekRepository: RewardWeekRepository {
     }
 }
 
+actor TestPaymentRepository: PaymentRepository {
+    private var storage: [String: PaymentRecord]
+
+    init(seed: [PaymentRecord] = []) {
+        self.storage = Dictionary(uniqueKeysWithValues: seed.map { ($0.id, $0) })
+    }
+
+    func upsertPayment(_ payment: PaymentRecord) async throws {
+        storage[payment.id] = payment
+    }
+
+    func fetchPayment(coupleId: String, recordId: String) async throws -> PaymentRecord? {
+        guard let payment = storage[recordId], payment.coupleId == coupleId else {
+            return nil
+        }
+        return payment
+    }
+
+    func fetchPayments(coupleId: String, userId: String) async throws -> [PaymentRecord] {
+        storage.values
+            .filter { payment in
+                payment.coupleId == coupleId &&
+                (payment.debtorUserId == userId || payment.creditorUserId == userId)
+            }
+            .sorted(by: { $0.updatedAt > $1.updatedAt })
+    }
+
+    func markPaymentPaid(coupleId: String, recordId: String, debtorUserId: String, paidAt: Date) async throws {
+        guard var payment = storage[recordId],
+              payment.coupleId == coupleId,
+              payment.debtorUserId == debtorUserId else {
+            return
+        }
+        payment.markedPaidAt = paidAt
+        payment.markedByUserId = debtorUserId
+        payment.updatedAt = paidAt
+        storage[recordId] = payment
+    }
+
+    func resolvePaymentStatus(
+        coupleId: String,
+        recordId: String,
+        creditorUserId: String,
+        status: PaymentStatus,
+        resolvedAt: Date
+    ) async throws {
+        guard var payment = storage[recordId],
+              payment.coupleId == coupleId,
+              payment.creditorUserId == creditorUserId else {
+            return
+        }
+        payment.status = status
+        payment.acknowledgedByUserId = creditorUserId
+        payment.acknowledgedAt = status == .acknowledged ? resolvedAt : nil
+        payment.disputedAt = status == .disputed ? resolvedAt : nil
+        payment.updatedAt = resolvedAt
+        storage[recordId] = payment
+    }
+}
+
 actor TestEventRepository: EventRepository {
     private var storage: [EventLogEntry]
 

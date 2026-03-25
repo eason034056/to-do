@@ -1,0 +1,7 @@
+# Node dependencies
+node_modules/
+
+# Leftover Python scaffold files can stay local, but should not affect deploys.
+__pycache__/
+venv/
+*.local
