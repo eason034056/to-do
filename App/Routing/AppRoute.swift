@@ -6,6 +6,8 @@ enum AppRoute: Hashable, Identifiable {
     case dashboard
     case planning(dateKey: String)
     case settlement(dateKey: String)
+    case settlementHistory
+    case payment(recordId: String)
     case rewards(weekKey: String)
     case settings
 
@@ -21,6 +23,10 @@ enum AppRoute: Hashable, Identifiable {
             return "planning_\(dateKey)"
         case let .settlement(dateKey):
             return "settlement_\(dateKey)"
+        case .settlementHistory:
+            return "settlement_history"
+        case let .payment(recordId):
+            return "payment_\(recordId)"
         case let .rewards(weekKey):
             return "rewards_\(weekKey)"
         case .settings:

@@ -27,6 +27,11 @@ public struct MarkPlanningMissedUseCase: Sendable {
 
     @discardableResult
     public func execute(_ request: MarkPlanningMissedRequest) async throws -> DailyPlan {
+        if let existing = try await planRepository.fetchPlan(userId: request.userId, dateKey: request.dateKey),
+           existing.planningMissed {
+            return existing
+        }
+
         var plan = try await planRepository.fetchPlan(userId: request.userId, dateKey: request.dateKey) ?? DailyPlan(
             id: "\(request.userId)_\(request.dateKey)",
             userId: request.userId,

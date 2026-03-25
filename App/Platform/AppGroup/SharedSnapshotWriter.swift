@@ -17,6 +17,21 @@ struct SharedSnapshotWriter {
     }
 
     func write(from snapshot: DashboardSnapshot) throws {
+        var rewardSnapshot: SharedSnapshot.RewardSnapshot?
+        if let reward = snapshot.currentRewardWeek {
+            rewardSnapshot = SharedSnapshot.RewardSnapshot(
+                weekKey: reward.weekKey,
+                rewardText: reward.rewardText,
+                status: reward.status.rawValue
+            )
+        }
+
+        let pendingPayments = snapshot.pendingPayments.filter { $0.status == .pending }
+        let paymentSummary = SharedSnapshot.PaymentSummary(
+            pendingCount: pendingPayments.count,
+            totalPendingAmount: pendingPayments.reduce(Decimal.zero) { $0 + $1.amount }
+        )
+
         let sharedSnapshot = SharedSnapshot(
             generatedAt: Date(),
             today: SharedSnapshot.TodaySnapshot(
@@ -47,7 +62,9 @@ struct SharedSnapshotWriter {
                 selfOutcome: snapshot.latestSettlement?.subjectResult.outcome,
                 partnerOutcome: snapshot.latestSettlement?.counterpartySnapshot.latestKnownOutcome,
                 selfOwesAmount: snapshot.latestSettlement?.subjectResult.owesAmount ?? 0
-            )
+            ),
+            reward: rewardSnapshot,
+            payments: paymentSummary
         )
 
         let encoder = JSONEncoder()

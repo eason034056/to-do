@@ -216,6 +216,39 @@ final class SubmitNextDayPlanUseCaseTests: XCTestCase {
         XCTAssertEqual(savedTasks.count, 1)
     }
 
+    func testExecuteAcceptsEquivalentUTCAndGMTTimezoneIdentifiers() async throws {
+        let planRepo = TestPlanRepository()
+        let taskRepo = TestTaskRepository()
+        let useCase = SubmitNextDayPlanUseCase(planRepository: planRepo, taskRepository: taskRepo)
+        let timezone = TimeZone(secondsFromGMT: 0) ?? TimeZone.current
+        let submittedAt = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-03-08T22:15:00Z"))
+
+        let request = SubmitNextDayPlanRequest(
+            userId: "usr_1",
+            coupleId: "cpl_1",
+            submittedAt: submittedAt,
+            now: submittedAt,
+            timezone: timezone,
+            tasks: [
+                makeTask(
+                    id: "task_utc",
+                    ownerUserId: "usr_1",
+                    dateKey: "2026-03-09",
+                    localTimezone: "UTC",
+                    title: "utc alias",
+                    bucket: .required
+                )
+            ],
+            noRequiredTasksConfirmed: false
+        )
+
+        let plan = try await useCase.execute(request)
+        let savedTasks = try await taskRepo.fetchTasks(userId: "usr_1", dateKey: "2026-03-09")
+
+        XCTAssertEqual(plan.dateKey, "2026-03-09")
+        XCTAssertEqual(savedTasks.count, 1)
+    }
+
     func testExecuteRejectsSubmissionAfterCutoffTime() async throws {
         let useCase = SubmitNextDayPlanUseCase(planRepository: TestPlanRepository(), taskRepository: TestTaskRepository())
         let timezone = try XCTUnwrap(TimeZone(identifier: "UTC"))
@@ -286,6 +319,96 @@ final class SubmitNextDayPlanUseCaseTests: XCTestCase {
             XCTAssertEqual(
                 error,
                 .invalidPlanningWindow(reminderTime: "23:00", cutoffTime: "21:30")
+            )
+        }
+    }
+
+    func testExecuteAllowsResubmissionAfterCutoffWhenPlanAlreadySubmitted() async throws {
+        let now = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-03-08T22:00:00Z"))
+        let submittedAt = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-03-08T23:30:00Z"))
+        let timezone = try XCTUnwrap(TimeZone(identifier: "UTC"))
+        let existingPlan = DailyPlan(
+            id: "usr_1_2026-03-09",
+            userId: "usr_1",
+            coupleId: "cpl_1",
+            dateKey: "2026-03-09",
+            localTimezone: "UTC",
+            submittedAt: try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-03-08T22:10:00Z")),
+            planningMissed: false
+        )
+        let planRepo = TestPlanRepository(seed: [existingPlan])
+        let taskRepo = TestTaskRepository()
+        let useCase = SubmitNextDayPlanUseCase(planRepository: planRepo, taskRepository: taskRepo)
+
+        let plan = try await useCase.execute(
+            SubmitNextDayPlanRequest(
+                userId: "usr_1",
+                coupleId: "cpl_1",
+                submittedAt: submittedAt,
+                now: now,
+                timezone: timezone,
+                tasks: [
+                    makeTask(
+                        id: "task_1",
+                        ownerUserId: "usr_1",
+                        dateKey: "2026-03-09",
+                        localTimezone: "UTC",
+                        title: "resubmit",
+                        bucket: .required
+                    )
+                ],
+                noRequiredTasksConfirmed: false
+            )
+        )
+
+        XCTAssertEqual(plan.dateKey, "2026-03-09")
+        XCTAssertEqual(plan.submittedAt, submittedAt)
+    }
+
+    func testExecuteRejectsResubmissionAfterEditableDeadline() async throws {
+        let now = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-03-08T22:00:00Z"))
+        let submittedAt = try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-03-09T00:00:01Z"))
+        let timezone = try XCTUnwrap(TimeZone(identifier: "UTC"))
+        let existingPlan = DailyPlan(
+            id: "usr_1_2026-03-09",
+            userId: "usr_1",
+            coupleId: "cpl_1",
+            dateKey: "2026-03-09",
+            localTimezone: "UTC",
+            submittedAt: try XCTUnwrap(ISO8601DateFormatter().date(from: "2026-03-08T22:10:00Z")),
+            planningMissed: false
+        )
+        let useCase = SubmitNextDayPlanUseCase(
+            planRepository: TestPlanRepository(seed: [existingPlan]),
+            taskRepository: TestTaskRepository()
+        )
+
+        do {
+            _ = try await useCase.execute(
+                SubmitNextDayPlanRequest(
+                    userId: "usr_1",
+                    coupleId: "cpl_1",
+                    submittedAt: submittedAt,
+                    now: now,
+                    timezone: timezone,
+                    tasks: [
+                        makeTask(
+                            id: "task_1",
+                            ownerUserId: "usr_1",
+                            dateKey: "2026-03-09",
+                            localTimezone: "UTC",
+                            title: "too late edit",
+                            bucket: .required
+                        )
+                    ],
+                    noRequiredTasksConfirmed: false
+                )
+            )
+            XCTFail("Expected edit deadline error")
+        } catch let error as SubmitNextDayPlanError {
+            XCTAssertEqual(
+                error,
+                .editDeadlinePassed(deadline: "00:00", actualLocalTime: "00:00:01")
             )
         }
     }

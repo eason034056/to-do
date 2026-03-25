@@ -1,18 +1,28 @@
 import Foundation
 import CoupleTodoCore
+import CoupleTodoFirebase
 
-struct DemoAppEnvironment {
-    static let defaultCurrentUserId = "usr_self"
+struct AppEnvironment {
+    static let demoCurrentUserId = "usr_self"
 
-    let userRepository: MemoryUserRepository
-    let coupleRepository: MemoryCoupleRepository
-    let deviceInstallationRepository: MemoryDeviceInstallationRepository
-    let planRepository: MemoryPlanRepository
-    let taskRepository: MemoryTaskRepository
-    let settlementRepository: MemorySettlementRepository
-    let rewardWeekRepository: MemoryRewardWeekRepository
-    let eventRepository: MemoryEventRepository
+    let authService: any AuthenticationService
+    let coupleLifecycleGateway: any CoupleLifecycleGateway
+    let userRepository: any UserRepository
+    let coupleRepository: any CoupleRepository
+    let deviceInstallationRepository: any DeviceInstallationRepository
+    let planRepository: any PlanRepository
+    let taskRepository: any TaskRepository
+    let settlementRepository: any SettlementRepository
+    let rewardWeekRepository: any RewardWeekRepository
+    let paymentRepository: any PaymentRepository
+    let eventRepository: any EventRepository
     let sharedSnapshotWriter: SharedSnapshotWriter
+    let nowProvider: () -> Date
+
+    @MainActor
+    var profileBootstrapper: UserProfileBootstrapper {
+        UserProfileBootstrapper(userRepository: userRepository)
+    }
 
     var loadDashboardUseCase: LoadDashboardUseCase {
         LoadDashboardUseCase(
@@ -21,7 +31,8 @@ struct DemoAppEnvironment {
             planRepository: planRepository,
             taskRepository: taskRepository,
             settlementRepository: settlementRepository,
-            rewardWeekRepository: rewardWeekRepository
+            rewardWeekRepository: rewardWeekRepository,
+            paymentRepository: paymentRepository
         )
     }
 
@@ -30,23 +41,43 @@ struct DemoAppEnvironment {
     }
 
     var createTaskUseCase: CreateTaskUseCase {
-        CreateTaskUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        CreateTaskUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: settlementRepository,
+            eventRepository: eventRepository
+        )
     }
 
     var updateTaskUseCase: UpdateTaskUseCase {
-        UpdateTaskUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        UpdateTaskUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: settlementRepository,
+            eventRepository: eventRepository
+        )
     }
 
     var deleteTaskUseCase: DeleteTaskUseCase {
-        DeleteTaskUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        DeleteTaskUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: settlementRepository,
+            eventRepository: eventRepository
+        )
     }
 
     var toggleTaskCompletionUseCase: ToggleTaskCompletionUseCase {
-        ToggleTaskCompletionUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        ToggleTaskCompletionUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: settlementRepository,
+            eventRepository: eventRepository
+        )
     }
 
     var reorderTasksUseCase: ReorderTasksUseCase {
-        ReorderTasksUseCase(taskRepository: taskRepository, eventRepository: eventRepository)
+        ReorderTasksUseCase(
+            taskRepository: taskRepository,
+            settlementRepository: settlementRepository,
+            eventRepository: eventRepository
+        )
     }
 
     var acknowledgeSettlementUseCase: AcknowledgeSettlementUseCase {
@@ -61,11 +92,44 @@ struct DemoAppEnvironment {
         )
     }
 
-    func now() -> Date {
-        Date()
+    var markPlanningMissedUseCase: MarkPlanningMissedUseCase {
+        MarkPlanningMissedUseCase(planRepository: planRepository, eventRepository: eventRepository)
     }
 
-    static func demo() -> DemoAppEnvironment {
+    var markPaymentPaidUseCase: MarkPaymentPaidUseCase {
+        MarkPaymentPaidUseCase(paymentRepository: paymentRepository)
+    }
+
+    var resolvePaymentStatusUseCase: ResolvePaymentStatusUseCase {
+        ResolvePaymentStatusUseCase(paymentRepository: paymentRepository)
+    }
+
+    func now() -> Date {
+        nowProvider()
+    }
+
+    @MainActor
+    static func live() -> AppEnvironment {
+        let services = FirebaseAppServices.live()
+        return AppEnvironment(
+            authService: services.authService,
+            coupleLifecycleGateway: services.coupleLifecycleGateway,
+            userRepository: services.userRepository,
+            coupleRepository: services.coupleRepository,
+            deviceInstallationRepository: services.deviceInstallationRepository,
+            planRepository: services.planRepository,
+            taskRepository: services.taskRepository,
+            settlementRepository: services.settlementRepository,
+            rewardWeekRepository: services.rewardWeekRepository,
+            paymentRepository: services.paymentRepository,
+            eventRepository: services.eventRepository,
+            sharedSnapshotWriter: SharedSnapshotWriter(),
+            nowProvider: Date.init
+        )
+    }
+
+    @MainActor
+    static func demo() -> AppEnvironment {
         let now = Date()
         let selfTimezone = TimeZone(identifier: "America/Chicago") ?? .current
         let partnerTimezone = TimeZone(identifier: "Asia/Tokyo") ?? .current
@@ -78,7 +142,7 @@ struct DemoAppEnvironment {
 
         let users = [
             UserProfile(
-                id: defaultCurrentUserId,
+                id: demoCurrentUserId,
                 displayName: "W",
                 coupleId: "cpl_demo",
                 currentTimezone: selfTimezone.identifier,
@@ -103,7 +167,7 @@ struct DemoAppEnvironment {
 
         let couple = Couple(
             id: "cpl_demo",
-            memberIds: [defaultCurrentUserId, "usr_partner"],
+            memberIds: [demoCurrentUserId, "usr_partner"],
             status: .active,
             weekStartsOn: .monday,
             penaltyPolicy: .default,
@@ -130,10 +194,10 @@ struct DemoAppEnvironment {
         ]
 
         let tasks: [String: [TodoTask]] = [
-            "\(defaultCurrentUserId)_\(selfContext.dateKey)": [
+            "\(demoCurrentUserId)_\(selfContext.dateKey)": [
                 TodoTask(
                     id: "task_self_required",
-                    ownerUserId: defaultCurrentUserId,
+                    ownerUserId: demoCurrentUserId,
                     dateKey: selfContext.dateKey,
                     localTimezone: selfTimezone.identifier,
                     title: "Ship domain foundation",
@@ -148,7 +212,7 @@ struct DemoAppEnvironment {
                 ),
                 TodoTask(
                     id: "task_self_optional",
-                    ownerUserId: defaultCurrentUserId,
+                    ownerUserId: demoCurrentUserId,
                     dateKey: selfContext.dateKey,
                     localTimezone: selfTimezone.identifier,
                     title: "Refine widget snapshot copy",
@@ -194,10 +258,10 @@ struct DemoAppEnvironment {
                     updatedAt: now
                 )
             ],
-            "\(defaultCurrentUserId)_\(selfNextDateKey)": [
+            "\(demoCurrentUserId)_\(selfNextDateKey)": [
                 TodoTask(
                     id: "task_plan_required",
-                    ownerUserId: defaultCurrentUserId,
+                    ownerUserId: demoCurrentUserId,
                     dateKey: selfNextDateKey,
                     localTimezone: selfTimezone.identifier,
                     title: "Plan tomorrow's must-do",
@@ -212,7 +276,7 @@ struct DemoAppEnvironment {
                 ),
                 TodoTask(
                     id: "task_plan_optional",
-                    ownerUserId: defaultCurrentUserId,
+                    ownerUserId: demoCurrentUserId,
                     dateKey: selfNextDateKey,
                     localTimezone: selfTimezone.identifier,
                     title: "Optional backlog cleanup",
@@ -230,9 +294,9 @@ struct DemoAppEnvironment {
 
         let settlements = [
             DailySettlement(
-                id: "\(defaultCurrentUserId)_\(selfContext.dateKey)",
+                id: "\(demoCurrentUserId)_\(selfContext.dateKey)",
                 coupleId: "cpl_demo",
-                subjectUserId: defaultCurrentUserId,
+                subjectUserId: demoCurrentUserId,
                 counterpartyUserId: "usr_partner",
                 dateKey: selfContext.dateKey,
                 localTimezone: selfTimezone.identifier,
@@ -251,7 +315,7 @@ struct DemoAppEnvironment {
                     latestKnownDateKey: partnerContext.dateKey,
                     latestKnownOutcome: .pass
                 ),
-                pendingAcknowledgementUserIds: [defaultCurrentUserId],
+                pendingAcknowledgementUserIds: [demoCurrentUserId],
                 rewardImpact: RewardImpact(weekKey: selfContext.weekKey, stillEligible: false)
             )
         ]
@@ -271,22 +335,114 @@ struct DemoAppEnvironment {
                 ),
                 rewardText: "Saturday brunch if both stay green",
                 status: .active,
-                eligibility: [defaultCurrentUserId: false, "usr_partner": true],
-                memberLocalWeekKeys: [defaultCurrentUserId: currentWeekKey, "usr_partner": partnerContext.weekKey],
+                eligibility: [demoCurrentUserId: false, "usr_partner": true],
+                memberLocalWeekKeys: [demoCurrentUserId: currentWeekKey, "usr_partner": partnerContext.weekKey],
                 updatedAt: now
             )
         ]
 
-        return DemoAppEnvironment(
-            userRepository: MemoryUserRepository(seed: users),
-            coupleRepository: MemoryCoupleRepository(seed: [couple]),
+        let userRepository = MemoryUserRepository(seed: users)
+        let coupleRepository = MemoryCoupleRepository(seed: [couple])
+
+        return AppEnvironment(
+            authService: DemoAuthenticationService(userId: demoCurrentUserId),
+            coupleLifecycleGateway: DemoCoupleLifecycleGateway(
+                userRepository: userRepository,
+                coupleRepository: coupleRepository
+            ),
+            userRepository: userRepository,
+            coupleRepository: coupleRepository,
             deviceInstallationRepository: MemoryDeviceInstallationRepository(seed: []),
             planRepository: MemoryPlanRepository(seed: plans),
             taskRepository: MemoryTaskRepository(seed: tasks),
             settlementRepository: MemorySettlementRepository(seed: settlements),
             rewardWeekRepository: MemoryRewardWeekRepository(seed: rewardWeeks),
+            paymentRepository: MemoryPaymentRepository(seed: []),
             eventRepository: MemoryEventRepository(seed: []),
             sharedSnapshotWriter: SharedSnapshotWriter()
+            ,
+            nowProvider: Date.init
+        )
+    }
+}
+
+@MainActor
+private final class DemoAuthenticationService: AuthenticationService {
+    private let session: AuthSession
+
+    init(userId: String) {
+        session = AuthSession(userId: userId, displayName: "Demo User")
+    }
+
+    func currentSession() -> AuthSession? {
+        session
+    }
+
+    func signIn(with provider: AuthenticationProvider) async throws -> AuthSession {
+        session
+    }
+
+    func handleOpenURL(_ url: URL) -> Bool {
+        false
+    }
+
+    func signOut() throws {}
+}
+
+@MainActor
+private final class DemoCoupleLifecycleGateway: CoupleLifecycleGateway {
+    private let userRepository: any UserRepository
+    private let coupleRepository: any CoupleRepository
+
+    init(userRepository: any UserRepository, coupleRepository: any CoupleRepository) {
+        self.userRepository = userRepository
+        self.coupleRepository = coupleRepository
+    }
+
+    func createCouple(
+        weekStartsOn: WeekStart,
+        reminderConfig: ReminderConfig,
+        penaltyPolicy: PenaltyPolicy
+    ) async throws -> PairingResult {
+        guard let session = DemoAuthenticationService(userId: AppEnvironment.demoCurrentUserId).currentSession() else {
+            return PairingResult(coupleId: "", memberIds: [], status: .pending, inviteCode: nil)
+        }
+        let result = try await CreateCoupleUseCase(
+            userRepository: userRepository,
+            coupleRepository: coupleRepository
+        ).execute(
+            CreateCoupleRequest(
+                creatorUserId: session.userId,
+                now: Date(),
+                weekStartsOn: weekStartsOn,
+                penaltyPolicy: penaltyPolicy,
+                reminderConfig: reminderConfig
+            )
+        )
+        return PairingResult(
+            coupleId: result.couple.id,
+            memberIds: result.couple.memberIds,
+            status: result.couple.status,
+            inviteCode: result.inviteCode
+        )
+    }
+
+    func joinCouple(inviteCode: String) async throws -> PairingResult {
+        let couple = try await JoinCoupleUseCase(
+            userRepository: userRepository,
+            coupleRepository: coupleRepository
+        ).execute(
+            JoinCoupleRequest(
+                userId: AppEnvironment.demoCurrentUserId,
+                inviteCode: inviteCode,
+                now: Date()
+            )
+        )
+        return PairingResult(
+            coupleId: couple.id,
+            memberIds: couple.memberIds,
+            status: couple.status,
+            inviteCode: couple.inviteCode
         )
     }
 }

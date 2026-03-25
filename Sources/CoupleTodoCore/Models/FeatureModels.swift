@@ -18,8 +18,13 @@ public struct DashboardSnapshot: Sendable, Equatable {
     public let selfSubmittedNextPlan: Bool
     public let partnerSubmittedNextPlan: Bool
     public let planningTargetDateKey: String
+    public let selfPlanningCountdownMinutes: Int
+    public let partnerPlanningCountdownMinutes: Int
+    public let selfSettlementCountdownMinutes: Int
+    public let partnerSettlementCountdownMinutes: Int
     public let latestSettlement: DailySettlement?
     public let currentRewardWeek: RewardWeek?
+    public let pendingPayments: [PaymentRecord]
     public let pendingGate: DashboardPendingGate?
 
     public init(
@@ -35,8 +40,13 @@ public struct DashboardSnapshot: Sendable, Equatable {
         selfSubmittedNextPlan: Bool,
         partnerSubmittedNextPlan: Bool,
         planningTargetDateKey: String,
+        selfPlanningCountdownMinutes: Int,
+        partnerPlanningCountdownMinutes: Int,
+        selfSettlementCountdownMinutes: Int,
+        partnerSettlementCountdownMinutes: Int,
         latestSettlement: DailySettlement?,
         currentRewardWeek: RewardWeek?,
+        pendingPayments: [PaymentRecord],
         pendingGate: DashboardPendingGate?
     ) {
         self.user = user
@@ -51,8 +61,13 @@ public struct DashboardSnapshot: Sendable, Equatable {
         self.selfSubmittedNextPlan = selfSubmittedNextPlan
         self.partnerSubmittedNextPlan = partnerSubmittedNextPlan
         self.planningTargetDateKey = planningTargetDateKey
+        self.selfPlanningCountdownMinutes = selfPlanningCountdownMinutes
+        self.partnerPlanningCountdownMinutes = partnerPlanningCountdownMinutes
+        self.selfSettlementCountdownMinutes = selfSettlementCountdownMinutes
+        self.partnerSettlementCountdownMinutes = partnerSettlementCountdownMinutes
         self.latestSettlement = latestSettlement
         self.currentRewardWeek = currentRewardWeek
+        self.pendingPayments = pendingPayments
         self.pendingGate = pendingGate
     }
 }

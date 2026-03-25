@@ -19,15 +19,58 @@ targets:
         type: group
     dependencies:
       - package: CoupleTodoCore
+        product: CoupleTodoCore
+      - package: CoupleTodoCore
+        product: CoupleTodoFirebase
+      - target: CoupleTodoWidgetExtension
     settings:
       base:
         CURRENT_PROJECT_VERSION: 1
         MARKETING_VERSION: 1.0
         INFOPLIST_FILE: App/Support/Info.plist
         CODE_SIGN_ENTITLEMENTS: App/Support/CoupleTodo.entitlements
+        OTHER_LDFLAGS: "$(inherited) -ObjC"
         PRODUCT_BUNDLE_IDENTIFIER: com.coupletodo.app
         TARGETED_DEVICE_FAMILY: "1,2"
         SWIFT_VERSION: 5.0
         INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+    scheme:
+      testTargets:
+        - CoupleTodoAppTests
+
+  CoupleTodoWidgetExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: CoupleTodoWidget
+        type: group
+    dependencies:
+      - package: CoupleTodoCore
+        product: CoupleTodoCore
+    settings:
+      base:
+        INFOPLIST_FILE: CoupleTodoWidget/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.coupletodo.app.widget
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.0
+        SWIFT_VERSION: 5.0
+        CODE_SIGN_ENTITLEMENTS: CoupleTodoWidget/CoupleTodoWidget.entitlements
+    entitlements:
+      path: CoupleTodoWidget/CoupleTodoWidget.entitlements
+
+  CoupleTodoAppTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Tests/CoupleTodoAppTests
+        type: group
+    dependencies:
+      - target: CoupleTodo
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO

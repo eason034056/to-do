@@ -28,19 +28,22 @@ struct RootView: View {
             }
         }
         .onOpenURL { url in
-            coordinator.handle(url: url)
+            coordinator.handleIncomingURL(url)
         }
         .fullScreenCover(item: $coordinator.fullScreenRoute) { route in
             NavigationStack {
                 destination(for: route)
                     .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
-                            Button("Close") {
-                                coordinator.dismissFullScreenRoute()
+                        if coordinator.canDismissCurrentFullScreenRoute() {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button("Close") {
+                                    coordinator.dismissFullScreenRoute()
+                                }
                             }
                         }
                     }
             }
+            .interactiveDismissDisabled(coordinator.canDismissCurrentFullScreenRoute() == false)
         }
         .alert(
             "CoupleTodo",
@@ -76,6 +79,10 @@ struct RootView: View {
             PlanningView(coordinator: coordinator, dateKey: dateKey)
         case let .settlement(dateKey):
             SettlementView(coordinator: coordinator, dateKey: dateKey)
+        case .settlementHistory:
+            SettlementHistoryView(coordinator: coordinator)
+        case let .payment(recordId):
+            PaymentAcknowledgementView(coordinator: coordinator, recordId: recordId)
         case let .rewards(weekKey):
             RewardsView(coordinator: coordinator, weekKey: weekKey)
         case .settings:

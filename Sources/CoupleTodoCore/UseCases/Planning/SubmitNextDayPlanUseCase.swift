@@ -36,6 +36,7 @@ public enum SubmitNextDayPlanError: Error, Equatable {
     case missingRequiredTaskConfirmation
     case submissionBeforeReminderTime(reminderTime: String, actualLocalTime: String)
     case submissionAfterCutoffTime(cutoffTime: String, actualLocalTime: String)
+    case editDeadlinePassed(deadline: String, actualLocalTime: String)
     case invalidPlanningWindow(reminderTime: String, cutoffTime: String)
     case taskBelongsToAnotherUser
     case taskDateKeyMismatch(expected: String, actual: String)
@@ -53,27 +54,36 @@ public struct SubmitNextDayPlanUseCase: Sendable {
 
     @discardableResult
     public func execute(_ request: SubmitNextDayPlanRequest) async throws -> DailyPlan {
-        switch request.planningWindowPolicy.validate(submittedAt: request.submittedAt, timezone: request.timezone) {
-        case .withinWindow:
-            break
-        case let .beforeReminderTime(reminderTime, actualLocalTime):
-            throw SubmitNextDayPlanError.submissionBeforeReminderTime(
-                reminderTime: reminderTime,
-                actualLocalTime: actualLocalTime
-            )
-        case let .afterCutoffTime(cutoffTime, actualLocalTime):
-            throw SubmitNextDayPlanError.submissionAfterCutoffTime(
-                cutoffTime: cutoffTime,
-                actualLocalTime: actualLocalTime
-            )
-        case let .invalidPolicy(reminderTime, cutoffTime):
-            throw SubmitNextDayPlanError.invalidPlanningWindow(
-                reminderTime: reminderTime,
-                cutoffTime: cutoffTime
-            )
-        }
-
         let nextDayKey = DateKeyFactory.nextDateKey(from: request.now, timezone: request.timezone)
+        let existingPlan = try await planRepository.fetchPlan(userId: request.userId, dateKey: nextDayKey)
+
+        if existingPlan?.submittedAt != nil {
+            try validateResubmissionDeadline(
+                submittedAt: request.submittedAt,
+                nextDayKey: nextDayKey,
+                timezone: request.timezone
+            )
+        } else {
+            switch request.planningWindowPolicy.validate(submittedAt: request.submittedAt, timezone: request.timezone) {
+            case .withinWindow:
+                break
+            case let .beforeReminderTime(reminderTime, actualLocalTime):
+                throw SubmitNextDayPlanError.submissionBeforeReminderTime(
+                    reminderTime: reminderTime,
+                    actualLocalTime: actualLocalTime
+                )
+            case let .afterCutoffTime(cutoffTime, actualLocalTime):
+                throw SubmitNextDayPlanError.submissionAfterCutoffTime(
+                    cutoffTime: cutoffTime,
+                    actualLocalTime: actualLocalTime
+                )
+            case let .invalidPolicy(reminderTime, cutoffTime):
+                throw SubmitNextDayPlanError.invalidPlanningWindow(
+                    reminderTime: reminderTime,
+                    cutoffTime: cutoffTime
+                )
+            }
+        }
 
         if request.tasks.isEmpty {
             throw SubmitNextDayPlanError.emptyTasks
@@ -91,8 +101,10 @@ public struct SubmitNextDayPlanUseCase: Sendable {
             if task.dateKey != nextDayKey {
                 throw SubmitNextDayPlanError.taskDateKeyMismatch(expected: nextDayKey, actual: task.dateKey)
             }
-            if task.localTimezone != request.timezone.identifier {
-                throw SubmitNextDayPlanError.taskTimezoneMismatch(expected: request.timezone.identifier, actual: task.localTimezone)
+            let expectedTimezone = normalizedTimezoneIdentifier(for: request.timezone.identifier)
+            let actualTimezone = normalizedTimezoneIdentifier(for: task.localTimezone)
+            if actualTimezone != expectedTimezone {
+                throw SubmitNextDayPlanError.taskTimezoneMismatch(expected: expectedTimezone, actual: actualTimezone)
             }
         }
 
@@ -119,6 +131,22 @@ public struct SubmitNextDayPlanUseCase: Sendable {
 
         return plan
     }
+
+    private func validateResubmissionDeadline(
+        submittedAt: Date,
+        nextDayKey: String,
+        timezone: TimeZone
+    ) throws {
+        guard let deadline = DateKeyFactory.startOfDateKey(nextDayKey, timezone: timezone) else {
+            return
+        }
+        if submittedAt >= deadline {
+            throw SubmitNextDayPlanError.editDeadlinePassed(
+                deadline: "00:00",
+                actualLocalTime: DateKeyFactory.preciseLocalTimeString(from: submittedAt, timezone: timezone)
+            )
+        }
+    }
 }
 
 enum DateKeyFactory {
@@ -134,4 +162,26 @@ enum DateKeyFactory {
 
         return formatter.string(from: nextDate)
     }
+
+    static func startOfDateKey(_ dateKey: String, timezone: TimeZone) -> Date? {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = timezone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter.date(from: "\(dateKey) 00:00:00")
+    }
+
+    static func preciseLocalTimeString(from date: Date, timezone: TimeZone) -> String {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = timezone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "HH:mm:ss"
+        return formatter.string(from: date)
+    }
+}
+
+private func normalizedTimezoneIdentifier(for identifier: String) -> String {
+    TimeZone(identifier: identifier)?.identifier ?? identifier
 }

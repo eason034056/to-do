@@ -69,6 +69,10 @@ struct DashboardView: View {
                         Text("Tomorrow date key: \(snapshot.planningTargetDateKey)")
                         Text("You submitted: \(snapshot.selfSubmittedNextPlan ? "Yes" : "No")")
                         Text("Partner submitted: \(snapshot.partnerSubmittedNextPlan ? "Yes" : "No")")
+                        Text("You planning countdown: \(snapshot.selfPlanningCountdownMinutes) min")
+                        Text("Partner planning countdown: \(snapshot.partnerPlanningCountdownMinutes) min")
+                        Text("You settlement countdown: \(snapshot.selfSettlementCountdownMinutes) min")
+                        Text("Partner settlement countdown: \(snapshot.partnerSettlementCountdownMinutes) min")
                     }
 
                     Section("Your Required") {
@@ -108,6 +112,28 @@ struct DashboardView: View {
                                     }
                                 }
                             }
+
+                            Button("Settlement History") {
+                                coordinator.navigate(to: .settlementHistory)
+                            }
+                        }
+                    }
+
+                    if snapshot.pendingPayments.isEmpty == false {
+                        Section("Pending Payments") {
+                            ForEach(snapshot.pendingPayments) { payment in
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text("\(payment.sourceDateKey) · \(NSDecimalNumber(decimal: payment.amount).stringValue) \(payment.currency)")
+                                        .font(.body.weight(.medium))
+                                    Text("Status: \(payment.status.rawValue)")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Button("Open Payment") {
+                                        coordinator.navigate(to: .payment(recordId: payment.id))
+                                    }
+                                    .buttonStyle(.bordered)
+                                }
+                            }
                         }
                     }
 
@@ -124,6 +150,13 @@ struct DashboardView: View {
                     await coordinator.refreshPlanningDraft()
                 }
                 .navigationTitle("Dashboard")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Sign Out", role: .destructive) {
+                            coordinator.signOut()
+                        }
+                    }
+                }
                 .sheet(item: $taskEditorState) { state in
                     NavigationStack {
                         TaskEditorView(state: state) { draft, task, dateKey, localTimezone in

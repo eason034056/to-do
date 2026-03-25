@@ -3,6 +3,7 @@ import Foundation
 public enum TaskMutationError: Error, Equatable {
     case taskBelongsToAnotherUser
     case taskNotFound
+    case dayLockedByFinalizedSettlement(dateKey: String)
 }
 
 public struct CreateTaskRequest: Sendable {
@@ -21,10 +22,16 @@ public struct CreateTaskRequest: Sendable {
 
 public struct CreateTaskUseCase: Sendable {
     private let taskRepository: TaskRepository
+    private let settlementRepository: SettlementRepository
     private let eventRepository: EventRepository
 
-    public init(taskRepository: TaskRepository, eventRepository: EventRepository) {
+    public init(
+        taskRepository: TaskRepository,
+        settlementRepository: SettlementRepository,
+        eventRepository: EventRepository
+    ) {
         self.taskRepository = taskRepository
+        self.settlementRepository = settlementRepository
         self.eventRepository = eventRepository
     }
 
@@ -33,6 +40,12 @@ public struct CreateTaskUseCase: Sendable {
         guard request.task.ownerUserId == request.actorUserId else {
             throw TaskMutationError.taskBelongsToAnotherUser
         }
+        try await ensureDayIsMutable(
+            settlementRepository: settlementRepository,
+            coupleId: request.coupleId,
+            actorUserId: request.actorUserId,
+            dateKey: request.task.dateKey
+        )
 
         var task = request.task
         task.createdAt = request.now
@@ -72,10 +85,16 @@ public struct UpdateTaskRequest: Sendable {
 
 public struct UpdateTaskUseCase: Sendable {
     private let taskRepository: TaskRepository
+    private let settlementRepository: SettlementRepository
     private let eventRepository: EventRepository
 
-    public init(taskRepository: TaskRepository, eventRepository: EventRepository) {
+    public init(
+        taskRepository: TaskRepository,
+        settlementRepository: SettlementRepository,
+        eventRepository: EventRepository
+    ) {
         self.taskRepository = taskRepository
+        self.settlementRepository = settlementRepository
         self.eventRepository = eventRepository
     }
 
@@ -84,6 +103,12 @@ public struct UpdateTaskUseCase: Sendable {
         guard request.task.ownerUserId == request.actorUserId else {
             throw TaskMutationError.taskBelongsToAnotherUser
         }
+        try await ensureDayIsMutable(
+            settlementRepository: settlementRepository,
+            coupleId: request.coupleId,
+            actorUserId: request.actorUserId,
+            dateKey: request.task.dateKey
+        )
 
         var task = request.task
         task.updatedAt = request.now
@@ -126,10 +151,16 @@ public struct DeleteTaskRequest: Sendable {
 
 public struct DeleteTaskUseCase: Sendable {
     private let taskRepository: TaskRepository
+    private let settlementRepository: SettlementRepository
     private let eventRepository: EventRepository
 
-    public init(taskRepository: TaskRepository, eventRepository: EventRepository) {
+    public init(
+        taskRepository: TaskRepository,
+        settlementRepository: SettlementRepository,
+        eventRepository: EventRepository
+    ) {
         self.taskRepository = taskRepository
+        self.settlementRepository = settlementRepository
         self.eventRepository = eventRepository
     }
 
@@ -137,6 +168,12 @@ public struct DeleteTaskUseCase: Sendable {
         guard request.ownerUserId == request.actorUserId else {
             throw TaskMutationError.taskBelongsToAnotherUser
         }
+        try await ensureDayIsMutable(
+            settlementRepository: settlementRepository,
+            coupleId: request.coupleId,
+            actorUserId: request.actorUserId,
+            dateKey: request.dateKey
+        )
 
         try await taskRepository.deleteTask(id: request.taskId, ownerUserId: request.ownerUserId, dateKey: request.dateKey)
         try await eventRepository.appendEvent(
@@ -173,15 +210,27 @@ public struct ToggleTaskCompletionRequest: Sendable {
 
 public struct ToggleTaskCompletionUseCase: Sendable {
     private let taskRepository: TaskRepository
+    private let settlementRepository: SettlementRepository
     private let eventRepository: EventRepository
 
-    public init(taskRepository: TaskRepository, eventRepository: EventRepository) {
+    public init(
+        taskRepository: TaskRepository,
+        settlementRepository: SettlementRepository,
+        eventRepository: EventRepository
+    ) {
         self.taskRepository = taskRepository
+        self.settlementRepository = settlementRepository
         self.eventRepository = eventRepository
     }
 
     @discardableResult
     public func execute(_ request: ToggleTaskCompletionRequest) async throws -> TodoTask {
+        try await ensureDayIsMutable(
+            settlementRepository: settlementRepository,
+            coupleId: request.coupleId,
+            actorUserId: request.actorUserId,
+            dateKey: request.dateKey
+        )
         let tasks = try await taskRepository.fetchTasks(userId: request.actorUserId, dateKey: request.dateKey)
         guard var task = tasks.first(where: { $0.id == request.taskId && $0.deleted == false }) else {
             throw TaskMutationError.taskNotFound
@@ -230,14 +279,26 @@ public struct ReorderTasksRequest: Sendable {
 
 public struct ReorderTasksUseCase: Sendable {
     private let taskRepository: TaskRepository
+    private let settlementRepository: SettlementRepository
     private let eventRepository: EventRepository
 
-    public init(taskRepository: TaskRepository, eventRepository: EventRepository) {
+    public init(
+        taskRepository: TaskRepository,
+        settlementRepository: SettlementRepository,
+        eventRepository: EventRepository
+    ) {
         self.taskRepository = taskRepository
+        self.settlementRepository = settlementRepository
         self.eventRepository = eventRepository
     }
 
     public func execute(_ request: ReorderTasksRequest) async throws {
+        try await ensureDayIsMutable(
+            settlementRepository: settlementRepository,
+            coupleId: request.coupleId,
+            actorUserId: request.actorUserId,
+            dateKey: request.dateKey
+        )
         var tasks = try await taskRepository.fetchTasks(userId: request.actorUserId, dateKey: request.dateKey)
         let sortMap = Dictionary(uniqueKeysWithValues: request.orderedTaskIds.enumerated().map { ($1, ($0 + 1) * 1000) })
 
@@ -264,5 +325,18 @@ public struct ReorderTasksUseCase: Sendable {
                 createdAt: request.now
             )
         )
+    }
+}
+
+private func ensureDayIsMutable(
+    settlementRepository: SettlementRepository,
+    coupleId: String,
+    actorUserId: String,
+    dateKey: String
+) async throws {
+    let settlementId = "\(actorUserId)_\(dateKey)"
+    if let settlement = try await settlementRepository.fetchSettlement(coupleId: coupleId, settlementId: settlementId),
+       settlement.state == .finalized {
+        throw TaskMutationError.dayLockedByFinalizedSettlement(dateKey: dateKey)
     }
 }

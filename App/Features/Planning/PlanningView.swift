@@ -37,6 +37,12 @@ struct PlanningView: View {
                     }
                 }
 
+                Button("Carry Over Optional From Today") {
+                    Task {
+                        await coordinator.carryOverOptionalTasks()
+                    }
+                }
+
                 ForEach(coordinator.planningDraftTasks.filter { $0.bucket == .optional && $0.deleted == false }) { task in
                     planningTaskRow(task)
                 }

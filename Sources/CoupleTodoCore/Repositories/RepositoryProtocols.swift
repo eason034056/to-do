@@ -40,6 +40,20 @@ public protocol RewardWeekRepository: Sendable {
     func fetchRewardWeek(coupleId: String, weekKey: String) async throws -> RewardWeek?
 }
 
+public protocol PaymentRepository: Sendable {
+    func upsertPayment(_ payment: PaymentRecord) async throws
+    func fetchPayment(coupleId: String, recordId: String) async throws -> PaymentRecord?
+    func fetchPayments(coupleId: String, userId: String) async throws -> [PaymentRecord]
+    func markPaymentPaid(coupleId: String, recordId: String, debtorUserId: String, paidAt: Date) async throws
+    func resolvePaymentStatus(
+        coupleId: String,
+        recordId: String,
+        creditorUserId: String,
+        status: PaymentStatus,
+        resolvedAt: Date
+    ) async throws
+}
+
 public protocol EventRepository: Sendable {
     func appendEvent(_ event: EventLogEntry) async throws
     func fetchEvents(coupleId: String, limit: Int) async throws -> [EventLogEntry]
