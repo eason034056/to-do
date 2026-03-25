@@ -15,6 +15,8 @@
 		4C21F8C74B78F058299133D8 /* PlanningReminderActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 870009AACCE5636E9893D680 /* PlanningReminderActivity.swift */; };
 		4EC56B20B70277FFA473ACDF /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD54F2A18FCB6541AFE5ACB /* AppRoute.swift */; };
 		5492F137C87460D32CE6D80C /* SettlementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA317ABD7F56B8F827B5A8DC /* SettlementView.swift */; };
+		5690D838FA69E2BB5274D8AB /* GoogleService-Info.plist.example in Resources */ = {isa = PBXBuildFile; fileRef = 8DEEA641F96EF62DAF54CC02 /* GoogleService-Info.plist.example */; };
+		613CD8BF9EB66524618F69B9 /* CoupleTodoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D482112DC4EEB509FE14FB /* CoupleTodoUITests.swift */; };
 		6460C32C255051FB54C02FE7 /* PlanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F56C09285AFB12CDEF6229 /* PlanningView.swift */; };
 		744381513445BA8E175FAFFB /* CoupleTodoCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9ECC0F2354AD194C7476393F /* CoupleTodoCore */; };
 		75AFB9CC11563BCFCDAC8B54 /* DemoAppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509747D19F1B33B98BD1D /* DemoAppEnvironment.swift */; };
@@ -35,6 +37,7 @@
 		CCF3836A749020D45AB08E21 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62C0A1A47970B8450D80047 /* NotificationService.swift */; };
 		D4C413F391ED18CFF51F9447 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF749D9CF9B9F2AE48405B1 /* SettingsView.swift */; };
 		D853ADFCF96765E28371E2EC /* CoupleTodoCore in Frameworks */ = {isa = PBXBuildFile; productRef = E0B7766AAED04BFA31219462 /* CoupleTodoCore */; };
+		E42A5B7BADC16DFF0492E77A /* OfflineBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C62D01DF91CFE771599694 /* OfflineBannerView.swift */; };
 		E9255D92C178830AD701A23E /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA9A2B76E1F281759802E1C /* AppMain.swift */; };
 		ECB70AC2A586C0248A3A79C4 /* PaymentAcknowledgementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75569C4B652CAA4E692B4F01 /* PaymentAcknowledgementView.swift */; };
 		EFAD51D378FCA86AD40FC121 /* SharedSnapshotWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D2DB83562C4B80513A51CE /* SharedSnapshotWriter.swift */; };
@@ -54,6 +57,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 513A20429C057CB61D3ED934;
 			remoteInfo = CoupleTodoWidgetExtension;
+		};
+		9994B0FDF7E9646957E5B20B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F1319402EBED9253CFAAF52D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4B0E86686A477A1745C94F74;
+			remoteInfo = CoupleTodo;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -78,11 +88,13 @@
 		1AD54F2A18FCB6541AFE5ACB /* AppRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
 		1C1B50DBAD40124CE8ECE122 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		213C11857BEFCA96D0373225 /* SettlementHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementHistoryView.swift; sourceTree = "<group>"; };
+		27D482112DC4EEB509FE14FB /* CoupleTodoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleTodoUITests.swift; sourceTree = "<group>"; };
 		2AA9F33E6949BA44CDE62FE4 /* RewardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardsView.swift; sourceTree = "<group>"; };
 		2AB509747D19F1B33B98BD1D /* DemoAppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAppEnvironment.swift; sourceTree = "<group>"; };
 		2CF749D9CF9B9F2AE48405B1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		38F9B5A6C1E521573DBFAB54 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
 		3A11E2B0B9723D81E2311F70 /* DailySettlementActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailySettlementActivity.swift; sourceTree = "<group>"; };
+		41C62D01DF91CFE771599694 /* OfflineBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineBannerView.swift; sourceTree = "<group>"; };
 		45F326BFA7D7B4C4CCE33C85 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		56B96CFAEE79508EF67FC72D /* to-do */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "to-do"; path = .; sourceTree = SOURCE_ROOT; };
 		5D01B8FAE5CF89513E7B61D7 /* InMemoryRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryRepositories.swift; sourceTree = "<group>"; };
@@ -93,6 +105,8 @@
 		853A1FC474CF94D032721496 /* DeepLinkRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRouter.swift; sourceTree = "<group>"; };
 		870009AACCE5636E9893D680 /* PlanningReminderActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanningReminderActivity.swift; sourceTree = "<group>"; };
 		8D791394AF906C721B0BA6BA /* TaskEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorView.swift; sourceTree = "<group>"; };
+		8DEEA641F96EF62DAF54CC02 /* GoogleService-Info.plist.example */ = {isa = PBXFileReference; path = "GoogleService-Info.plist.example"; sourceTree = "<group>"; };
+		963E5E849A85604E0DF547F8 /* CoupleTodoUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CoupleTodoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C5BA60C46FC959725EA4A5F /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		9DA287294C2DF3ECDA6604E0 /* CoupleTodoWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CoupleTodoWidget.entitlements; sourceTree = "<group>"; };
 		A0C92AA06882DB675B50BCBB /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
@@ -155,6 +169,14 @@
 				91A3B856A31718322412F8E8 /* Notifications */,
 			);
 			path = Platform;
+			sourceTree = "<group>";
+		};
+		1B9DA02F4750B3837499C3F5 /* CoupleTodoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				27D482112DC4EEB509FE14FB /* CoupleTodoUITests.swift */,
+			);
+			path = CoupleTodoUITests;
 			sourceTree = "<group>";
 		};
 		379C97306EE5CAE4004BCB54 /* Settlement */ = {
@@ -228,6 +250,7 @@
 				4526EE02D797A258DEBEA36E /* Rewards */,
 				54B91B805F5A07E8E831B0C2 /* Settings */,
 				379C97306EE5CAE4004BCB54 /* Settlement */,
+				DDD8AE4462C1E063786E5289 /* Sync */,
 				F45E72551479C915983C1571 /* Tasks */,
 			);
 			path = Features;
@@ -308,6 +331,7 @@
 			isa = PBXGroup;
 			children = (
 				C53765494359381B55D46D63 /* CoupleTodoAppTests */,
+				1B9DA02F4750B3837499C3F5 /* CoupleTodoUITests */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -328,12 +352,21 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
+		DDD8AE4462C1E063786E5289 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				41C62D01DF91CFE771599694 /* OfflineBannerView.swift */,
+			);
+			path = Sync;
+			sourceTree = "<group>";
+		};
 		E50884A8DD59A64311F2740E /* App */ = {
 			isa = PBXGroup;
 			children = (
 				45F326BFA7D7B4C4CCE33C85 /* AppCoordinator.swift */,
 				FFA9A2B76E1F281759802E1C /* AppMain.swift */,
 				1C1B50DBAD40124CE8ECE122 /* GoogleService-Info.plist */,
+				8DEEA641F96EF62DAF54CC02 /* GoogleService-Info.plist.example */,
 				6C7585BA38B87A3C09D055E3 /* RootView.swift */,
 				A923CADAC8CAF78D82389926 /* Core */,
 				8D00F73F9E79F567D1E9A325 /* Environment */,
@@ -350,6 +383,7 @@
 			children = (
 				154BDCF054F285B6DC7EB31D /* CoupleTodo.app */,
 				BFADF512AB01B6CFDC20F6DC /* CoupleTodoAppTests.xctest */,
+				963E5E849A85604E0DF547F8 /* CoupleTodoUITests.xctest */,
 				D7DD08819DE2EDCC1BBEC445 /* CoupleTodoWidgetExtension.appex */,
 			);
 			name = Products;
@@ -426,6 +460,24 @@
 			productReference = D7DD08819DE2EDCC1BBEC445 /* CoupleTodoWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		7160632F8883B53C684F10F4 /* CoupleTodoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6DEB6B76F60A12E1A0B2E963 /* Build configuration list for PBXNativeTarget "CoupleTodoUITests" */;
+			buildPhases = (
+				077207CEE166AFEE363E7507 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5DE3C20A63657A1A72AB42A2 /* PBXTargetDependency */,
+			);
+			name = CoupleTodoUITests;
+			packageProductDependencies = (
+			);
+			productName = CoupleTodoUITests;
+			productReference = 963E5E849A85604E0DF547F8 /* CoupleTodoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -435,6 +487,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					7160632F8883B53C684F10F4 = {
+						TestTargetID = 4B0E86686A477A1745C94F74;
+					};
 				};
 			};
 			buildConfigurationList = 9E92419D1BDD0460D096FC1D /* Build configuration list for PBXProject "CoupleTodo" */;
@@ -456,6 +511,7 @@
 			targets = (
 				4B0E86686A477A1745C94F74 /* CoupleTodo */,
 				1BF1A44C963C31A8EE188947 /* CoupleTodoAppTests */,
+				7160632F8883B53C684F10F4 /* CoupleTodoUITests */,
 				513A20429C057CB61D3ED934 /* CoupleTodoWidgetExtension */,
 			);
 		};
@@ -467,12 +523,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1B249F3AA52603B100CC834 /* GoogleService-Info.plist in Resources */,
+				5690D838FA69E2BB5274D8AB /* GoogleService-Info.plist.example in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		077207CEE166AFEE363E7507 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				613CD8BF9EB66524618F69B9 /* CoupleTodoUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3E4D7DC747B1B51828472AD4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -497,6 +562,7 @@
 				75AFB9CC11563BCFCDAC8B54 /* DemoAppEnvironment.swift in Sources */,
 				31E4BACC7AAFEBE11D9AC379 /* InMemoryRepositories.swift in Sources */,
 				CCF3836A749020D45AB08E21 /* NotificationService.swift in Sources */,
+				E42A5B7BADC16DFF0492E77A /* OfflineBannerView.swift in Sources */,
 				9FFDC2E1033E73C0B9100252 /* PairingView.swift in Sources */,
 				ECB70AC2A586C0248A3A79C4 /* PaymentAcknowledgementView.swift in Sources */,
 				4C21F8C74B78F058299133D8 /* PlanningReminderActivity.swift in Sources */,
@@ -527,6 +593,11 @@
 			isa = PBXTargetDependency;
 			target = 4B0E86686A477A1745C94F74 /* CoupleTodo */;
 			targetProxy = 3B8FECA0686A350018BB6240 /* PBXContainerItemProxy */;
+		};
+		5DE3C20A63657A1A72AB42A2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4B0E86686A477A1745C94F74 /* CoupleTodo */;
+			targetProxy = 9994B0FDF7E9646957E5B20B /* PBXContainerItemProxy */;
 		};
 		C5291A4C59DA2C5954196475 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -611,6 +682,25 @@
 			};
 			name = Release;
 		};
+		27B3C609A1AB6F57680B08A6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.CoupleTodoUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CoupleTodo;
+			};
+			name = Debug;
+		};
 		3487937063D5537A36FD13A7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -667,6 +757,25 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CoupleTodo.app/CoupleTodo";
+			};
+			name = Release;
+		};
+		4AB83D3597DB974FDFE52AEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.CoupleTodoUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CoupleTodo;
 			};
 			name = Release;
 		};
@@ -791,6 +900,15 @@
 			buildConfigurations = (
 				164678420EA8C0BD510F155C /* Debug */,
 				36ACF1BED7D923C8989B3DD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6DEB6B76F60A12E1A0B2E963 /* Build configuration list for PBXNativeTarget "CoupleTodoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27B3C609A1AB6F57680B08A6 /* Debug */,
+				4AB83D3597DB974FDFE52AEA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

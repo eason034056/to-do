@@ -69,6 +69,7 @@ final class AppCoordinator: ObservableObject {
     }
 
     let environment: AppEnvironment
+    let syncTracker = SyncStatusTracker()
 
     @Published var phase: Phase = .loading
     @Published var path: [AppRoute] = []
@@ -89,9 +90,12 @@ final class AppCoordinator: ObservableObject {
     @Published var cachedFCMToken: String?
     @Published var cachedAPNsToken: String?
     @Published var notificationPermissionGranted = false
+    @Published var connectivity: ConnectivityStatus = .unknown
+    @Published var lastKnownTimezone: String?
 
     private var deferredRoute: AppRoute?
     private var dashboardSyncTask: Task<Void, Never>?
+    private var networkTask: Task<Void, Never>?
     private let dashboardSyncIntervalNanoseconds: UInt64 = 20_000_000_000
 
     init(environment: AppEnvironment) {
@@ -104,8 +108,30 @@ final class AppCoordinator: ObservableObject {
         await bootstrap()
     }
 
+    func startNetworkMonitoring() {
+        guard networkTask == nil else { return }
+        networkTask = Task { [weak self] in
+            guard let self else { return }
+            for await status in self.environment.networkMonitor.statusStream() {
+                guard Task.isCancelled == false else { break }
+                await MainActor.run {
+                    self.connectivity = status
+                }
+            }
+        }
+    }
+
+    func retrySyncManually() async {
+        syncTracker.markSyncing()
+        await refreshDashboard()
+        if syncTracker.status == .syncing {
+            syncTracker.markSuccess(at: environment.now())
+        }
+    }
+
     func bootstrap() async {
         stopDashboardSync()
+        startNetworkMonitoring()
         phase = .loading
         dashboardSnapshot = nil
         paymentRecords = []
@@ -129,6 +155,7 @@ final class AppCoordinator: ObservableObject {
                 now: environment.now(),
                 timezone: .current
             )
+            detectTimezoneChange(for: profile)
             await syncCurrentDeviceInstallation(for: profile)
             await requestNotificationPermission()
 
@@ -308,6 +335,7 @@ final class AppCoordinator: ObservableObject {
     func refreshDashboard() async {
         guard let userId = currentUserId else { return }
 
+        syncTracker.markSyncing()
         do {
             let snapshot = try await environment.loadDashboardUseCase.execute(
                 LoadDashboardRequest(userId: userId, now: environment.now())
@@ -318,7 +346,9 @@ final class AppCoordinator: ObservableObject {
             try? environment.sharedSnapshotWriter.write(from: resolvedSnapshot)
             await refreshPayments()
             await refreshSettingsDraft()
+            syncTracker.markSuccess(at: environment.now())
         } catch {
+            syncTracker.markFailed(error: error.localizedDescription)
             latestError = error.localizedDescription
         }
     }
@@ -887,6 +917,34 @@ final class AppCoordinator: ObservableObject {
             return TaskSortingService.sort(planningDraftTasks.filter { $0.deleted == false })
         }
         return []
+    }
+
+    // MARK: - Timezone Change Detection
+
+    private func detectTimezoneChange(for profile: UserProfile) {
+        let currentTimezone = TimeZone.current.identifier
+        let previousTimezone = lastKnownTimezone ?? profile.currentTimezone
+
+        if currentTimezone != previousTimezone {
+            latestError = "Timezone changed from \(previousTimezone) to \(currentTimezone). Data will be synced with the new timezone."
+        }
+        lastKnownTimezone = currentTimezone
+    }
+
+    // MARK: - Conflict Resolution (server-wins for finalized data)
+
+    func applyServerFinalOverride(for tasks: [TodoTask], serverTasks: [TodoTask]) -> [TodoTask] {
+        let serverFinalMap = Dictionary(
+            uniqueKeysWithValues: serverTasks
+                .filter { $0.syncState == .serverFinal }
+                .map { ($0.id, $0) }
+        )
+        return tasks.map { task in
+            if let serverVersion = serverFinalMap[task.id] {
+                return serverVersion
+            }
+            return task
+        }
     }
 
     private func refreshSettingsDraft() async {
