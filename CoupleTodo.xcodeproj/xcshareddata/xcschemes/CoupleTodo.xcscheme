@@ -50,6 +50,17 @@
                ReferencedContainer = "container:CoupleTodo.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7160632F8883B53C684F10F4"
+               BuildableName = "CoupleTodoUITests.xctest"
+               BlueprintName = "CoupleTodoUITests"
+               ReferencedContainer = "container:CoupleTodo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <CommandLineArguments>
       </CommandLineArguments>

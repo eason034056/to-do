@@ -64,16 +64,14 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse,
-        withCompletionHandler completionHandler: @escaping () -> Void
-    ) {
+        didReceive response: UNNotificationResponse
+    ) async {
         let userInfo = response.notification.request.content.userInfo
         if let url = NotificationService.deepLinkURL(from: userInfo) {
-            Task { @MainActor in
+            await MainActor.run {
                 coordinator?.handleIncomingURL(url)
             }
         }
-        completionHandler()
     }
 }
 

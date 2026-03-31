@@ -505,6 +505,16 @@ enum RewardWeekDocument {
             "updatedAt": FieldValue.serverTimestamp()
         ]
     }
+
+    /// Payload for `update` on an existing doc — must match `firestore.rules` `onlyChanges` for `rewardWeeks`.
+    static func clientDraftFieldsOnlyUpdate(_ rewardWeek: RewardWeek) -> [String: Any] {
+        [
+            "rewardText": rewardWeek.rewardText,
+            "draftedInWeekKey": rewardWeek.draftedInWeekKey,
+            "effectiveWeekStartDate": rewardWeek.effectiveWeekStartDate,
+            "updatedAt": FieldValue.serverTimestamp()
+        ]
+    }
 }
 
 enum PaymentRecordDocument {

@@ -80,6 +80,7 @@ final class AppCoordinatorAuthTests: XCTestCase {
             paymentRepository: MemoryPaymentRepository(seed: []),
             eventRepository: MemoryEventRepository(seed: []),
             sharedSnapshotWriter: SharedSnapshotWriter(),
+            networkMonitor: StubNetworkMonitor(),
             nowProvider: Date.init
         )
     }
@@ -139,6 +140,8 @@ private final class StubCoupleLifecycleGateway: CoupleLifecycleGateway {
     func joinCouple(inviteCode: String) async throws -> PairingResult {
         PairingResult(coupleId: "cpl_1", memberIds: ["usr_self", "usr_partner"], status: .active, inviteCode: inviteCode)
     }
+
+    func deleteAccount() async throws {}
 }
 
 private enum StubAuthError: LocalizedError {

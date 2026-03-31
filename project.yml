@@ -39,6 +39,7 @@ targets:
     scheme:
       testTargets:
         - CoupleTodoAppTests
+        - CoupleTodoUITests
 
   CoupleTodoWidgetExtension:
     type: app-extension
@@ -67,6 +68,20 @@ targets:
     deploymentTarget: "17.0"
     sources:
       - path: Tests/CoupleTodoAppTests
+        type: group
+    dependencies:
+      - target: CoupleTodo
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGNING_ALLOWED: NO
+
+  CoupleTodoUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Tests/CoupleTodoUITests
         type: group
     dependencies:
       - target: CoupleTodo

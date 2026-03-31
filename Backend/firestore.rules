@@ -30,6 +30,37 @@ service cloud.firestore {
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly(allowedKeys);
     }
 
+    function isServerOnly(keys) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny(keys);
+    }
+
+    // Client marks planning missed (deadline passed, no submission). Rules must allow false→true.
+    function planPlanningMissedUnchanged() {
+      return request.resource.data.planningMissed == resource.data.planningMissed;
+    }
+
+    function planPlanningMissedWasNotYetTrue() {
+      return resource.data.planningMissed == false
+        || resource.data.planningMissed == null;
+    }
+
+    function planOwnerMarksPlanningMissed() {
+      return planPlanningMissedWasNotYetTrue()
+        && request.resource.data.planningMissed == true
+        && request.auth.uid == resource.data.userId
+        && request.resource.data.submittedAt == resource.data.submittedAt
+        && resource.data.submittedAt == null;
+    }
+
+    function planCreatePlanningMissedAllowed() {
+      return request.resource.data.planningMissed == false
+        || (
+          request.resource.data.planningMissed == true
+          && request.resource.data.submittedAt == null
+        );
+    }
+
+    // ─── users ───
     match /users/{userId} {
       allow read: if canReadUserProfile(userId);
       allow create: if isSelf(userId) && request.resource.data.id == userId;
@@ -40,6 +71,7 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // ─── deviceInstallations ───
     match /deviceInstallations/{installationId} {
       allow read: if isSignedIn() && request.auth.uid == resource.data.userId;
       allow create: if isSignedIn()
@@ -52,68 +84,117 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // ─── couples ───
     match /couples/{coupleId} {
       allow read: if isCoupleMember(coupleId);
       allow create: if false;
       allow update: if isCoupleMember(coupleId)
-        && onlyChanges(["weekStartsOn", "penaltyPolicy", "reminderConfig", "updatedAt"]);
+        && onlyChanges(["weekStartsOn", "penaltyPolicy", "reminderConfig", "updatedAt"])
+        && isServerOnly(["id", "memberIds", "status", "inviteCode", "createdAt"]);
       allow delete: if false;
 
+      // ─── plans ───
       match /plans/{planId} {
         allow read: if isCoupleMember(coupleId);
         allow create: if isCoupleMember(coupleId)
           && request.auth.uid == request.resource.data.userId
           && request.resource.data.coupleId == coupleId
           && request.resource.data.id == planId
-          && request.resource.data.planningMissed == false;
+          && planCreatePlanningMissedAllowed();
         allow update: if isCoupleMember(coupleId)
           && request.auth.uid == resource.data.userId
           && request.resource.data.userId == resource.data.userId
           && request.resource.data.coupleId == resource.data.coupleId
           && request.resource.data.id == resource.data.id
-          && request.resource.data.planningMissed == resource.data.planningMissed;
+          && (planPlanningMissedUnchanged() || planOwnerMarksPlanningMissed());
         allow delete: if false;
 
+        // ─── tasks (under plan) ───
         match /tasks/{taskId} {
+          function parentSettlementFinalized() {
+            let settlementId = request.auth.uid + '_' + resource.data.dateKey;
+            let settlementPath = /databases/$(database)/documents/couples/$(coupleId)/settlements/$(settlementId);
+            return exists(settlementPath)
+              && get(settlementPath).data.state == 'finalized';
+          }
+
+          function parentSettlementFinalizedForCreate() {
+            let settlementId = request.auth.uid + '_' + request.resource.data.dateKey;
+            let settlementPath = /databases/$(database)/documents/couples/$(coupleId)/settlements/$(settlementId);
+            return exists(settlementPath)
+              && get(settlementPath).data.state == 'finalized';
+          }
+
           allow read: if isCoupleMember(coupleId);
           allow create: if isCoupleMember(coupleId)
             && request.auth.uid == request.resource.data.ownerUserId
             && request.resource.data.id == taskId
-            && !request.resource.data.keys().hasAny(["completedAtServer"]);
+            && !request.resource.data.keys().hasAny(["completedAtServer"])
+            && !parentSettlementFinalizedForCreate();
           allow update: if isCoupleMember(coupleId)
             && request.auth.uid == resource.data.ownerUserId
             && request.resource.data.ownerUserId == resource.data.ownerUserId
             && request.resource.data.id == resource.data.id
             && !request.resource.data.diff(resource.data).affectedKeys()
-              .hasAny(["ownerUserId", "id", "createdAt", "completedAtServer"]);
-          allow delete: if isCoupleMember(coupleId) && request.auth.uid == resource.data.ownerUserId;
+              .hasAny(["ownerUserId", "id", "createdAt", "completedAtServer"])
+            && !parentSettlementFinalized();
+          allow delete: if isCoupleMember(coupleId)
+            && request.auth.uid == resource.data.ownerUserId
+            && !parentSettlementFinalized();
         }
       }
 
+      // ─── settlements ───
       match /settlements/{settlementId} {
         allow read: if isCoupleMember(coupleId);
         allow create: if false;
         allow update: if isCoupleMember(coupleId)
-          && onlyChanges(["pendingAcknowledgementUserIds", "updatedAt"]);
+          && resource.data.state == 'finalized'
+          && onlyChanges(["pendingAcknowledgementUserIds", "updatedAt"])
+          && isServerOnly([
+            "id", "coupleId", "subjectUserId", "counterpartyUserId",
+            "dateKey", "localTimezone", "localWeekKey", "state",
+            "computedAt", "graceAppliedUntil", "subjectResult",
+            "counterpartySnapshot", "rewardImpact"
+          ]);
         allow delete: if false;
       }
 
+      // ─── rewardWeeks ───
       match /rewardWeeks/{weekKey} {
+        function isRewardMutable() {
+          return !resource.data.keys().hasAny(["status"])
+            || resource.data.status == "draft";
+        }
+
         allow read: if isCoupleMember(coupleId);
         allow create: if isCoupleMember(coupleId)
           && request.resource.data.coupleId == coupleId
           && request.resource.data.status == "draft";
         allow update: if isCoupleMember(coupleId)
-          && onlyChanges(["rewardText", "draftedInWeekKey", "effectiveWeekStartDate", "updatedAt"]);
+          && isRewardMutable()
+          && onlyChanges(["rewardText", "draftedInWeekKey", "effectiveWeekStartDate", "updatedAt"])
+          && isServerOnly([
+            "id", "coupleId", "weekKey", "status",
+            "eligibility", "memberLocalWeekKeys",
+            "finalizeWhenBothMembersWeekClosed",
+            "earnedAt", "missedAt"
+          ]);
         allow delete: if false;
       }
 
+      // ─── payments ───
       match /payments/{recordId} {
+        function isPaymentPending() {
+          return resource.data.status == 'pending';
+        }
+
         allow read: if isCoupleMember(coupleId);
         allow create: if false;
         allow update: if isCoupleMember(coupleId) && (
           (
             request.auth.uid == resource.data.debtorUserId
+            && isPaymentPending()
             && onlyChanges(["markedPaidAt", "markedByUserId", "updatedAt"])
             && request.resource.data.markedByUserId == request.auth.uid
           ) || (
@@ -125,6 +206,7 @@ service cloud.firestore {
         allow delete: if false;
       }
 
+      // ─── events ───
       match /events/{eventId} {
         allow read: if isCoupleMember(coupleId);
         allow create: if isCoupleMember(coupleId)
@@ -133,6 +215,17 @@ service cloud.firestore {
           && request.resource.data.coupleId == coupleId;
         allow update, delete: if false;
       }
+
+      // ─── readModels (server-only) ───
+      match /readModels/{modelId} {
+        allow read: if isCoupleMember(coupleId);
+        allow create, update, delete: if false;
+      }
+    }
+
+    // ─── _jobDedupe (server-only) ───
+    match /_jobDedupe/{dedupeKey} {
+      allow read, write: if false;
     }
   }
 }

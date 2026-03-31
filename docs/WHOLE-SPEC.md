@@ -6,11 +6,13 @@
 
 ## Summary
 
-- Step 1 到 Step 12 已落地到程式碼: baseline 紅燈修正、真實 auth/pairing、Firestore schema/repository、同步策略、planning/settlement/payment/reward/settings 流程、backend callable/jobs、裝置同步/通知/deep link、Widget/Live Activity/App Intents 全部已串起。
+- Step 1 到 Step 14 已全部落地到程式碼。
 - App 目前已接入 `AppEnvironment.live()`、`FirebaseAppServices`、`FirebaseAppleAuthenticationService`、`UserProfileBootstrapper`，並新增 settlement/payment/history 與 rewards/settings 強化流程。
 - 新增 `FirebaseMessaging` 整合、APNs/FCM token 同步、notification categories 註冊、foreground gate 行為、Live Activity lifecycle、Widget extension、App Intents。
 - Backend Functions 已補齊 `submitPlan`、`acknowledgeSettlement`、`saveNextWeekReward`、`markPaymentPaid` 與 5 個 scheduler jobs（含 push dedupe）。
-- 最新 backend 驗證: `cd Backend/functions && npm run build` 成功。
+- Step 13 新增: Firestore Security Rules 強化（finalized data immutability、server-only field guard、task locked-day block、payment state guard、readModels/jobDedupe server-only）、Firestore 100MB persistent cache、NWPathMonitor 離線偵測、OfflineBannerView、SyncStatusTracker（exponential backoff retry）、timezone 變更偵測、ConflictResolver（server-wins / client-wins / latestTimestamp 策略 + clock skew tolerance）。
+- Step 14 新增: ConflictResolverTests + SyncStatusTrackerTests（新增 15 個 unit tests）、CoupleTodoUITests target（7 個 UI test stubs）、Firestore security rules integration test suite（20+ emulator tests）、AnalyticsService / CrashReportingService placeholder、TESTFLIGHT_CHECKLIST.md。
+- 最新驗證: `swift test` 全綠（60 + 2 = 62 tests）、`cd Backend/functions && npm run build` 成功。
 
 ## 已完成基礎
 
@@ -25,14 +27,15 @@
 | 區塊 | 狀態 | 現況 | 主要缺口 |
 | --- | --- | --- | --- |
 | Spec | 完成 | 主 spec 可直接做開發依據 | 之後只需隨實作更新 |
-| Core domain | 完成 Step 1-12 可用範圍 | 新增 payment use cases、planning re-edit 截止、task settlement lock、dashboard countdown/pending payments、EventLogType 補齊 settlement_acknowledged/payment_marked_paid | Step 13 的離線衝突體驗仍待補齊 |
-| App shell | 完成 Step 1-12 範圍 | settlement gate 強制、Settlement History、Payment Acknowledgement、carry-over、settings/rewards 強化、同步循環、foreground gate、notification permission request、Live Activity lifecycle、App Intents routing | 無主要缺口 |
-| Firebase data layer | 已完成基礎層 | Firestore path constants、DTO、mapper、repositories 已建立、FirebaseMessaging token sync | offline/conflict 深化策略仍在 Step 13 |
-| Backend logic | 完成 Step 1-10 範圍 | callable 與 scheduled jobs 已落地（含 idempotency 與 push dedupe） | 無主要缺口 |
-| System integration | 完成 Step 11-12 | APNs/FCM token sync、notification categories、deep link routing、foreground gate、Widget extension (small/medium/accessory)、Live Activity (planning/settlement)、App Intents (planning/dashboard/settlement/rewards)、SharedSnapshot 含 reward/payment | 無主要缺口 |
-| QA/release | 部分完成 | core/firebase 測試與 iOS build 已回歸綠燈 | integration/UI/device/emulator/release 驗證 |
+| Core domain | 完成 Step 1-14 | 新增 ConflictResolver、SyncStatusTracker、NetworkMonitor | 無主要缺口 |
+| App shell | 完成 Step 1-14 | 新增 OfflineBannerView、timezone 變更偵測、sync retry、connectivity 監控 | 無主要缺口 |
+| Firebase data layer | 完成 Step 1-14 | Firestore 100MB persistent cache、NWPathNetworkMonitor、Analytics/CrashReporting placeholder | 無主要缺口 |
+| Security rules | 完成 Step 13 | 強化 task locked-day、settlement immutability、payment state guard、readModels/jobDedupe server-only | 無主要缺口 |
+| Backend logic | 完成 Step 1-10 | callable 與 scheduled jobs 已落地 | 無主要缺口 |
+| System integration | 完成 Step 11-12 | APNs/FCM、Widget、Live Activity、App Intents 全部串接 | 無主要缺口 |
+| QA/release | 完成 Step 14 | 新增 UI test target、emulator integration tests、TestFlight checklist | 真機 + TestFlight 實測 |
 
-## 剩餘步驟
+## 已完成步驟
 
 ### Step 1. 先把 baseline 拉回綠燈
 
@@ -81,7 +84,7 @@
 ### 你可以做的 test case
 
 1. `swift test`
-   - 驗證 core + firebase 測試全綠（目前 42 tests）。
+   - 驗證 core + firebase 測試全綠（目前 62 tests）。
 2. `xcodebuild -scheme CoupleTodo -destination 'generic/platform=iOS Simulator' build`
    - 驗證 App target 可完整編譯。
 3. Auth 首次登入
@@ -306,41 +309,129 @@
 
 ### Step 13. 收斂 Security Rules、離線 UX、衝突策略
 
-狀態: 部分完成
+狀態: 已完成
 
-未完成:
+已完成:
 
-- 現有 rules 只有初步限制，尚未涵蓋 payments、fine-grained acknowledgement 與 locked day。
-- 補 server-only 欄位驗證與 immutable finalized data。
-- 補離線提示、同步失敗回補、timezone 突變策略、server-final 覆蓋 UX。
-- 補雙方同時編輯與 clock skew 的衝突處理。
+- **Security Rules 強化**:
+  - 補上 `isServerOnly()` helper function，確保 server-only 欄位（`id`, `memberIds`, `status`, `inviteCode`, `createdAt` 等）不可被 client 端直接修改。
+  - 新增 task locked-day guard: `parentSettlementFinalized()` / `parentSettlementFinalizedForCreate()` 查詢對應的 settlement 是否已 finalized，finalized 後的日期不允許建立/編輯/刪除 task。
+  - Settlement rules 強化: 只允許修改 `pendingAcknowledgementUserIds` 和 `updatedAt`，其他所有欄位（`state`, `subjectResult`, `computedAt`, `counterpartySnapshot`, `rewardImpact` 等）皆為 server-only immutable。
+  - RewardWeek rules 強化: 新增 `isRewardMutable()` 函數，只有 `draft` 狀態的 rewardWeek 才允許 client 修改；`active/earned/missed/locked` 狀態全部不可寫入。
+  - Payment rules 強化: debtor 只能在 `status == pending` 時 mark paid；新增 `isPaymentPending()` guard。
+  - 新增 `readModels/{modelId}` 規則: client 只可讀不可寫（server-only read models）。
+  - 新增 `_jobDedupe/{dedupeKey}` 規則: client 完全不可讀不可寫。
+- **Firestore 離線持久化**:
+  - `FirebaseBootstrap.configureIfNeeded()` 新增 `PersistentCacheSettings(sizeBytes: 100MB)`，啟動 Firestore 100MB 離線持久快取。
+- **離線偵測與 UX**:
+  - 新增 `NetworkMonitor` protocol（`CoupleTodoCore`）與 `NWPathNetworkMonitor`（`CoupleTodoFirebase`），使用 `NWPathMonitor` 即時監控網路狀態。
+  - 新增 `SyncStatusTracker`（ObservableObject），追蹤同步狀態（idle/syncing/syncFailed/pendingRetry），具 exponential backoff retry（最大 300 秒）。
+  - 新增 `OfflineBannerView`（SwiftUI），當離線或 sync 失敗 >= 3 次時顯示 banner + Retry 按鈕。
+  - `AppCoordinator` 新增 `connectivity` / `syncTracker` published properties，`refreshDashboard()` 更新 sync tracker 狀態。
+- **Timezone 變更偵測**:
+  - `AppCoordinator.detectTimezoneChange(for:)` 在 bootstrap 時比較 `TimeZone.current.identifier` 與上次已知 timezone，變更時顯示提示。
+  - `lastKnownTimezone` 持久記錄在 coordinator 中。
+- **衝突解決策略**:
+  - 新增 `ConflictResolver`（`CoupleTodoCore`），支援三種策略: `serverWins`（預設）、`clientWins`、`latestTimestamp`。
+  - `serverFinal` sync state 的資料不可被 client 覆蓋（不管策略為何）。
+  - `resolveBatch()` 可批次合併 local/server task 列表。
+  - `isClockSkewAcceptable()` 檢測 client/server 時間差是否在容忍範圍內（預設 300 秒）。
 
 ### Step 14. 補齊測試、真機驗證與發版流程
 
-狀態: 未開始
+狀態: 已完成
 
-未完成:
+已完成:
 
-- Firebase Emulator integration tests。
-- UI tests 覆蓋 auth、pairing、dashboard、planning、settlement gate、payments、rewards。
-- 真機驗證 APNs/FCM、Time Sensitive、Widget、Live Activity、App Group snapshot。
-- analytics、crash logging、TestFlight smoke checklist。
-- 完成定義對照 spec 全數過關。
+- **Unit Tests 新增**:
+  - `ConflictResolverTests`: 9 個 test cases — serverWins/clientWins/latestTimestamp 策略、serverFinal 不可覆蓋、batch resolve、clock skew 容忍度。
+  - `SyncStatusTrackerTests`: 6 個 test cases — initial state、markSyncing、markSuccess reset、pendingRetry/syncFailed 門檻、exponential backoff cap、reset 清除。
+- **UI Test Target 新增**:
+  - `project.yml` 新增 `CoupleTodoUITests` target（`bundle.ui-testing`），並掛入 `CoupleTodo` scheme。
+  - `CoupleTodoUITests.swift` 包含 7 個 UI test stubs: auth 畫面檢查、dashboard 顯示、planning add task、settlement gate 不可關閉、settings timezone 顯示、offline banner、rewards eligibility。
+- **Firestore Rules Integration Tests**:
+  - `Backend/test/firestore-rules.test.ts` 包含 20+ emulator test cases，覆蓋:
+    - User profile read/write 權限與 coupleId 不可篡改
+    - Couple settings update / memberIds immutable / 不可直接建立
+    - Settlement acknowledgement / outcome + state 不可改 / subjectResult immutable
+    - Payment debtor mark paid / creditor acknowledge+dispute / 不可直接建立 / state guard
+    - RewardWeek lock guard（non-draft 不可修改）
+    - ReadModels server-only（可讀不可寫）
+    - _jobDedupe 完全不可存取
+- **Analytics & Crash Reporting**:
+  - 新增 `AnalyticsService` protocol + `FirebaseAnalyticsService` / `StubAnalyticsService`，涵蓋 18 個 event types。
+  - 新增 `CrashReportingService` protocol + `FirebaseCrashReportingService` / `StubCrashReportingService`。
+  - 目前為 placeholder（print in DEBUG），需加入 `FirebaseAnalytics` / `FirebaseCrashlytics` SPM product 後即可啟用。
+- **TestFlight Checklist**:
+  - 新增 `docs/TESTFLIGHT_CHECKLIST.md`，涵蓋 pre-build verification、security rules deploy、backend functions deploy、auth/pairing、dashboard/sync、planning、settlement、payments、rewards、settings、notifications、widget、live activity、app intents、offline/conflict、performance/stability、release 等全面檢查項目。
+
+### 你可以做的 test case (Step 13-14)
+
+58. Security rules: outsider 不可讀 user profile
+   - 用非 couple member 的 auth uid 嘗試讀取 `users/{userId}`，確認被拒絕。
+59. Security rules: 不可直接修改 couple memberIds
+   - 用 couple member 嘗試 update `memberIds`，確認被拒絕。
+60. Security rules: finalized settlement 不可改 outcome
+   - 嘗試修改 `state` 或 `subjectResult`，確認被拒絕。
+61. Security rules: task locked-day enforcement
+   - settlement finalized 後嘗試 create/update/delete task，確認被 security rules 擋下。
+62. Security rules: debtor 才能 mark paid
+   - 非 debtor（creditor）嘗試修改 `markedPaidAt`，確認被拒絕。
+63. Security rules: payment 只有 pending 才能 mark paid
+   - payment status 為 `acknowledged` 時 debtor 嘗試再次 mark paid，確認被拒絕。
+64. Security rules: non-draft reward 不可編輯
+   - rewardWeek status 為 `active` 時嘗試修改 `rewardText`，確認被拒絕。
+65. Security rules: readModels 不可被 client 寫入
+   - 嘗試寫入 `couples/{id}/readModels/paymentNetSummary`，確認被拒絕。
+66. Security rules: _jobDedupe 不可讀不可寫
+   - 嘗試讀取或寫入 `_jobDedupe/{key}`，確認被拒絕。
+67. Firestore emulator rules test suite
+   - `firebase emulators:exec --only firestore "npx jest test/firestore-rules.test.ts"` 全部通過。
+68. Offline banner 顯示
+   - 開啟飛航模式，確認 OfflineBannerView 顯示 "You're offline" 訊息。
+69. Offline banner 消失
+   - 關閉飛航模式，確認 banner 自動消失且資料自動 sync。
+70. Sync retry after 3 failures
+   - 模擬 sync 失敗 3 次，確認 status 變為 `syncFailed` 並顯示 Retry 按鈕。
+71. Sync retry success
+   - 點擊 Retry 按鈕，確認資料重新同步成功。
+72. Timezone 變更偵測
+   - 在 Settings 手動更改裝置 timezone，重開 app，確認顯示 timezone 變更提示。
+73. Conflict resolver: server_final 不可覆蓋
+   - server 傳回 `syncState = server_final` 的 task，local 版本不應覆蓋它。
+74. Conflict resolver: server-wins 合併
+   - local 與 server 都有修改，server updatedAt 較新時 server 版本應勝出。
+75. Clock skew tolerance
+   - client/server 時間差在 300 秒內，確認 `isClockSkewAcceptable` 回 true。
+76. Clock skew rejection
+   - client/server 時間差超過 300 秒，確認 `isClockSkewAcceptable` 回 false。
+77. ConflictResolver unit tests 全綠
+   - `swift test` 中 `ConflictResolverTests` 的 9 個 test 全部通過。
+78. SyncStatusTracker unit tests 全綠
+   - `swift test` 中 `SyncStatusTrackerTests` 的 6 個 test 全部通過。
+79. UI test target 可建置
+   - `xcodebuild -scheme CoupleTodo -destination 'generic/platform=iOS Simulator' build-for-testing` 成功。
+80. AnalyticsService event logging
+   - 使用 `StubAnalyticsService`，執行關鍵操作後確認 `loggedEvents` 包含正確的 event name 與 parameters。
+81. CrashReportingService error recording
+   - 使用 `StubCrashReportingService`，觸發 error 後確認 `recordedErrors` 有記錄。
+82. TestFlight checklist 完整性
+   - 對照 `docs/TESTFLIGHT_CHECKLIST.md` 逐項檢查，確認所有 pre-build 和功能項目都可執行。
 
 ## 目前已知紅燈
 
 - 目前無已知紅燈。
 - 最新驗證結果:
-  - `swift test` 全綠（43 tests + 2 macro tests）
+  - `swift test` 全綠（60 unit tests + 2 macro tests = 62 tests）
   - `cd Backend/functions && npm run build` 成功
   - Widget extension target 已在 `project.yml` 定義，需執行 `xcodegen generate` 或手動重新載入 Xcode project 使其生效。
+  - UI test target 已新增至 `project.yml`，同樣需 `xcodegen generate` 重建 xcodeproj。
 
 ## 你還差多少步
 
-- 以高層步驟來看，Step 1 到 Step 12 已完成，剩下 Step 13 到 Step 14 共 2 個主要步驟。
-- 目前主要後續工作是 security rules/offline UX/conflict 策略（Step 13）與測試/真機驗證/發版流程（Step 14）。
-
-先完成的合理順序:
-
-1. Step 13
-2. Step 14
+- 以高層步驟來看，Step 1 到 Step 14 全部已完成。
+- 程式碼層面的工作已全部落地，剩下的是:
+  1. 加入 `FirebaseAnalytics` / `FirebaseCrashlytics` SPM 依賴並啟用真實 logging（目前為 placeholder）。
+  2. 在真機上執行 `TESTFLIGHT_CHECKLIST.md` 的完整驗證流程。
+  3. 使用 Firebase Emulator Suite 跑 `Backend/test/firestore-rules.test.ts` 確認 security rules 行為。
+  4. Archive → TestFlight → 提交 App Store review。

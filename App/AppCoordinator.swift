@@ -19,7 +19,7 @@ final class AppCoordinator: ObservableObject {
         case down
     }
 
-    struct SettingsDraft {
+    struct SettingsDraft: Equatable {
         var planningReminderTime: String
         var planningCutoffTime: String
         var dailySettlementTime: String
@@ -69,8 +69,17 @@ final class AppCoordinator: ObservableObject {
     }
 
     let environment: AppEnvironment
+    let syncTracker = SyncStatusTracker()
+
+    enum AppTab: String, CaseIterable {
+        case today
+        case plan
+        case us
+        case settings
+    }
 
     @Published var phase: Phase = .loading
+    @Published var selectedTab: AppTab = .today
     @Published var path: [AppRoute] = []
     @Published var fullScreenRoute: AppRoute?
     @Published var dashboardSnapshot: DashboardSnapshot?
@@ -89,9 +98,14 @@ final class AppCoordinator: ObservableObject {
     @Published var cachedFCMToken: String?
     @Published var cachedAPNsToken: String?
     @Published var notificationPermissionGranted = false
+    @Published var selfAvatarImage: UIImage?
+    @Published var partnerAvatarImage: UIImage?
+    @Published var connectivity: ConnectivityStatus = .unknown
+    @Published var lastKnownTimezone: String?
 
     private var deferredRoute: AppRoute?
     private var dashboardSyncTask: Task<Void, Never>?
+    private var networkTask: Task<Void, Never>?
     private let dashboardSyncIntervalNanoseconds: UInt64 = 20_000_000_000
 
     init(environment: AppEnvironment) {
@@ -104,8 +118,30 @@ final class AppCoordinator: ObservableObject {
         await bootstrap()
     }
 
+    func startNetworkMonitoring() {
+        guard networkTask == nil else { return }
+        networkTask = Task { [weak self] in
+            guard let self else { return }
+            for await status in self.environment.networkMonitor.statusStream() {
+                guard Task.isCancelled == false else { break }
+                await MainActor.run {
+                    self.connectivity = status
+                }
+            }
+        }
+    }
+
+    func retrySyncManually() async {
+        syncTracker.markSyncing()
+        await refreshDashboard()
+        if syncTracker.status == .syncing {
+            syncTracker.markSuccess(at: environment.now())
+        }
+    }
+
     func bootstrap() async {
         stopDashboardSync()
+        startNetworkMonitoring()
         phase = .loading
         dashboardSnapshot = nil
         paymentRecords = []
@@ -129,6 +165,7 @@ final class AppCoordinator: ObservableObject {
                 now: environment.now(),
                 timezone: .current
             )
+            detectTimezoneChange(for: profile)
             await syncCurrentDeviceInstallation(for: profile)
             await requestNotificationPermission()
 
@@ -157,6 +194,7 @@ final class AppCoordinator: ObservableObject {
             pairingCouple = snapshot.couple
             try? environment.sharedSnapshotWriter.write(from: resolvedSnapshot)
             rewardDraftText = resolvedSnapshot.currentRewardWeek?.rewardText ?? ""
+            loadSavedAvatars()
             phase = .ready
             startDashboardSyncIfNeeded()
 
@@ -216,6 +254,23 @@ final class AppCoordinator: ObservableObject {
         }
     }
 
+    @Published var isDeletingAccount = false
+
+    func deleteAccount() async {
+        guard isDeletingAccount == false else { return }
+        isDeletingAccount = true
+        latestError = nil
+
+        do {
+            try await environment.coupleLifecycleGateway.deleteAccount()
+            resetToSignedOutState()
+        } catch {
+            latestError = error.localizedDescription
+        }
+
+        isDeletingAccount = false
+    }
+
     func createCouple() async {
         guard isPairingActionInFlight == false else { return }
         isPairingActionInFlight = true
@@ -255,8 +310,25 @@ final class AppCoordinator: ObservableObject {
 
     func navigate(to route: AppRoute) {
         switch route {
-        case .planning, .settlement:
+        case .planning:
+            selectedTab = .plan
             fullScreenRoute = route
+        case .settlement:
+            selectedTab = .us
+            fullScreenRoute = route
+        case .settlementHistory:
+            selectedTab = .us
+            path.append(route)
+        case .payment:
+            selectedTab = .us
+            path.append(route)
+        case .rewards:
+            selectedTab = .us
+            path.append(route)
+        case .settings:
+            selectedTab = .settings
+        case .dashboard:
+            selectedTab = .today
         default:
             path.append(route)
         }
@@ -308,6 +380,7 @@ final class AppCoordinator: ObservableObject {
     func refreshDashboard() async {
         guard let userId = currentUserId else { return }
 
+        syncTracker.markSyncing()
         do {
             let snapshot = try await environment.loadDashboardUseCase.execute(
                 LoadDashboardRequest(userId: userId, now: environment.now())
@@ -318,7 +391,9 @@ final class AppCoordinator: ObservableObject {
             try? environment.sharedSnapshotWriter.write(from: resolvedSnapshot)
             await refreshPayments()
             await refreshSettingsDraft()
+            syncTracker.markSuccess(at: environment.now())
         } catch {
+            syncTracker.markFailed(error: error.localizedDescription)
             latestError = error.localizedDescription
         }
     }
@@ -889,6 +964,272 @@ final class AppCoordinator: ObservableObject {
         return []
     }
 
+    // MARK: - Optimistic Planning Tasks
+
+    func buildOptimisticPlanningTask(
+        title: String,
+        bucket: TaskBucket,
+        priority: TaskPriority = .p2,
+        dateKey: String
+    ) -> TodoTask? {
+        guard let snapshot = dashboardSnapshot,
+              let userId = currentUserId else { return nil }
+        let maxSort = planningDraftTasks.filter { $0.deleted == false }.map(\.sortOrder).max() ?? 0
+        let sortOrder = ((maxSort / 1000) + 1) * 1000
+        let timezone = TimeZone(identifier: snapshot.user.currentTimezone) ?? .current
+        let context = LocalTimeContextFactory.make(from: environment.now(), timezone: timezone)
+        return TodoTask(
+            id: "task_\(UUID().uuidString.lowercased())",
+            ownerUserId: userId,
+            dateKey: dateKey,
+            localTimezone: snapshot.user.currentTimezone,
+            title: title,
+            notes: nil,
+            bucket: bucket,
+            priority: priority,
+            status: .pending,
+            sortOrder: sortOrder,
+            completedAtServer: nil,
+            localUtcOffsetMinutes: context.utcOffsetMinutes,
+            completedAtClient: nil,
+            carriedFromTaskId: nil,
+            deleted: false,
+            syncState: .localPending
+        )
+    }
+
+    func insertPlanningTaskOptimistically(_ task: TodoTask) {
+        planningDraftTasks.append(task)
+        if task.bucket == .required {
+            noRequiredTasksConfirmed = false
+        }
+    }
+
+    func updatePlanningTaskOptimistically(_ taskId: String, draft: TaskEditorDraft) {
+        if let index = planningDraftTasks.firstIndex(where: { $0.id == taskId }) {
+            planningDraftTasks[index].title = draft.title.trimmingCharacters(in: .whitespacesAndNewlines)
+            planningDraftTasks[index].notes = draft.notes.isEmpty ? nil : draft.notes
+            planningDraftTasks[index].bucket = draft.bucket
+            planningDraftTasks[index].priority = draft.priority
+        }
+    }
+
+    func removePlanningTaskOptimistically(_ taskId: String) {
+        planningDraftTasks.removeAll { $0.id == taskId }
+        noRequiredTasksConfirmed = planningDraftTasks.contains(where: { $0.bucket == .required && $0.deleted == false }) == false
+    }
+
+    func savePlanningTaskInBackground(_ task: TodoTask) async -> Bool {
+        guard let snapshot = dashboardSnapshot,
+              let userId = currentUserId else { return false }
+        do {
+            _ = try await environment.createTaskUseCase.execute(
+                CreateTaskRequest(
+                    actorUserId: userId,
+                    coupleId: snapshot.couple.id,
+                    task: task,
+                    now: environment.now()
+                )
+            )
+            await refreshTaskState(for: task.dateKey)
+            return true
+        } catch {
+            removePlanningTaskOptimistically(task.id)
+            latestError = error.localizedDescription
+            return false
+        }
+    }
+
+    func deletePlanningTaskInBackground(_ task: TodoTask) async -> Bool {
+        guard let snapshot = dashboardSnapshot,
+              let userId = currentUserId else { return false }
+        do {
+            try await environment.deleteTaskUseCase.execute(
+                DeleteTaskRequest(
+                    actorUserId: userId,
+                    coupleId: snapshot.couple.id,
+                    taskId: task.id,
+                    ownerUserId: task.ownerUserId,
+                    dateKey: task.dateKey,
+                    now: environment.now()
+                )
+            )
+            await refreshTaskState(for: task.dateKey)
+            return true
+        } catch {
+            insertPlanningTaskOptimistically(task)
+            latestError = error.localizedDescription
+            return false
+        }
+    }
+
+    // MARK: - Optimistic UI
+
+    func insertTaskOptimistically(_ task: TodoTask) {
+        guard let snapshot = dashboardSnapshot else { return }
+        var required = snapshot.selfRequired
+        var optional = snapshot.selfOptional
+        if task.bucket == .required {
+            required.append(task)
+        } else {
+            optional.append(task)
+        }
+        dashboardSnapshot = snapshot.replacingSelfTasks(required: required, optional: optional)
+    }
+
+    func removeTaskOptimistically(_ taskId: String) {
+        guard let snapshot = dashboardSnapshot else { return }
+        let required = snapshot.selfRequired.filter { $0.id != taskId }
+        let optional = snapshot.selfOptional.filter { $0.id != taskId }
+        dashboardSnapshot = snapshot.replacingSelfTasks(required: required, optional: optional)
+    }
+
+    func toggleTaskOptimistically(_ task: TodoTask) {
+        guard let snapshot = dashboardSnapshot else { return }
+        let newStatus: TaskStatus = task.status == .completed ? .pending : .completed
+        func toggled(_ tasks: [TodoTask]) -> [TodoTask] {
+            tasks.map { t in
+                guard t.id == task.id else { return t }
+                var copy = t
+                copy.status = newStatus
+                if newStatus == .completed {
+                    copy.completedAtClient = Date()
+                } else {
+                    copy.completedAtClient = nil
+                }
+                return copy
+            }
+        }
+        dashboardSnapshot = snapshot.replacingSelfTasks(
+            required: toggled(snapshot.selfRequired),
+            optional: toggled(snapshot.selfOptional)
+        )
+    }
+
+    func saveTaskInBackground(_ task: TodoTask) async -> Bool {
+        guard let snapshot = dashboardSnapshot,
+              let userId = currentUserId else { return false }
+        do {
+            _ = try await environment.createTaskUseCase.execute(
+                CreateTaskRequest(
+                    actorUserId: userId,
+                    coupleId: snapshot.couple.id,
+                    task: task,
+                    now: environment.now()
+                )
+            )
+            await refreshTaskState(for: task.dateKey)
+            return true
+        } catch {
+            latestError = error.localizedDescription
+            return false
+        }
+    }
+
+    func deleteTaskInBackground(_ task: TodoTask) async -> Bool {
+        guard let snapshot = dashboardSnapshot,
+              let userId = currentUserId else { return false }
+        do {
+            try await environment.deleteTaskUseCase.execute(
+                DeleteTaskRequest(
+                    actorUserId: userId,
+                    coupleId: snapshot.couple.id,
+                    taskId: task.id,
+                    ownerUserId: task.ownerUserId,
+                    dateKey: task.dateKey,
+                    now: environment.now()
+                )
+            )
+            await refreshTaskState(for: task.dateKey)
+            return true
+        } catch {
+            latestError = error.localizedDescription
+            return false
+        }
+    }
+
+    func toggleTaskInBackground(_ task: TodoTask) async -> Bool {
+        guard let snapshot = dashboardSnapshot,
+              let userId = currentUserId else { return false }
+        do {
+            _ = try await environment.toggleTaskCompletionUseCase.execute(
+                ToggleTaskCompletionRequest(
+                    actorUserId: userId,
+                    coupleId: snapshot.couple.id,
+                    taskId: task.id,
+                    dateKey: task.dateKey,
+                    completed: task.status != .completed,
+                    now: environment.now()
+                )
+            )
+            await refreshTaskState(for: task.dateKey)
+            return true
+        } catch {
+            latestError = error.localizedDescription
+            return false
+        }
+    }
+
+    func buildOptimisticTask(
+        title: String,
+        bucket: TaskBucket,
+        priority: TaskPriority = .p2
+    ) -> TodoTask? {
+        guard let snapshot = dashboardSnapshot,
+              let userId = currentUserId else { return nil }
+        let allTasks = snapshot.selfRequired + snapshot.selfOptional
+        let maxSort = allTasks.map(\.sortOrder).max() ?? 0
+        let sortOrder = ((maxSort / 1000) + 1) * 1000
+        let timezone = TimeZone(identifier: snapshot.user.currentTimezone) ?? .current
+        let context = LocalTimeContextFactory.make(from: Date(), timezone: timezone)
+        return TodoTask(
+            id: "task_\(UUID().uuidString.lowercased())",
+            ownerUserId: userId,
+            dateKey: snapshot.selfContext.dateKey,
+            localTimezone: snapshot.user.currentTimezone,
+            title: title,
+            notes: nil,
+            bucket: bucket,
+            priority: priority,
+            status: .pending,
+            sortOrder: sortOrder,
+            completedAtServer: nil,
+            localUtcOffsetMinutes: context.utcOffsetMinutes,
+            completedAtClient: nil,
+            carriedFromTaskId: nil,
+            deleted: false,
+            syncState: .localPending
+        )
+    }
+
+    // MARK: - Timezone Change Detection
+
+    private func detectTimezoneChange(for profile: UserProfile) {
+        let currentTimezone = TimeZone.current.identifier
+        let previousTimezone = lastKnownTimezone ?? profile.currentTimezone
+
+        if currentTimezone != previousTimezone {
+            latestError = "Timezone changed from \(previousTimezone) to \(currentTimezone). Data will be synced with the new timezone."
+        }
+        lastKnownTimezone = currentTimezone
+    }
+
+    // MARK: - Conflict Resolution (server-wins for finalized data)
+
+    func applyServerFinalOverride(for tasks: [TodoTask], serverTasks: [TodoTask]) -> [TodoTask] {
+        let serverFinalMap = Dictionary(
+            uniqueKeysWithValues: serverTasks
+                .filter { $0.syncState == .serverFinal }
+                .map { ($0.id, $0) }
+        )
+        return tasks.map { task in
+            if let serverVersion = serverFinalMap[task.id] {
+                return serverVersion
+            }
+            return task
+        }
+    }
+
     private func refreshSettingsDraft() async {
         guard let snapshot = dashboardSnapshot else { return }
 
@@ -1057,7 +1398,7 @@ final class AppCoordinator: ObservableObject {
             _ = try? Activity.request(
                 attributes: attributes,
                 content: content,
-                pushType: nil
+                pushType: .token
             )
         }
     }
@@ -1087,7 +1428,7 @@ final class AppCoordinator: ObservableObject {
             _ = try? Activity.request(
                 attributes: attributes,
                 content: content,
-                pushType: nil
+                pushType: .token
             )
         }
     }
@@ -1173,6 +1514,7 @@ final class AppCoordinator: ObservableObject {
         stopDashboardSync()
         deferredRoute = nil
         isBootstrapped = false
+        selectedTab = .today
         path = []
         fullScreenRoute = nil
         dashboardSnapshot = nil
@@ -1186,7 +1528,44 @@ final class AppCoordinator: ObservableObject {
         pairingCouple = nil
         authInFlightProvider = nil
         isPairingActionInFlight = false
+        selfAvatarImage = nil
+        partnerAvatarImage = nil
         phase = .auth
+    }
+
+    // MARK: - Avatar Storage
+
+    func saveAvatar(_ image: UIImage?, forSelf: Bool) {
+        if forSelf {
+            selfAvatarImage = image
+        } else {
+            partnerAvatarImage = image
+        }
+
+        let key = forSelf ? "selfAvatar" : "partnerAvatar"
+        if let image, let data = image.pngData() {
+            let url = avatarFileURL(forKey: key)
+            try? data.write(to: url)
+        } else {
+            let url = avatarFileURL(forKey: key)
+            try? FileManager.default.removeItem(at: url)
+        }
+    }
+
+    func loadSavedAvatars() {
+        selfAvatarImage = loadAvatar(forKey: "selfAvatar")
+        partnerAvatarImage = loadAvatar(forKey: "partnerAvatar")
+    }
+
+    private func loadAvatar(forKey key: String) -> UIImage? {
+        let url = avatarFileURL(forKey: key)
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        return UIImage(data: data)
+    }
+
+    private func avatarFileURL(forKey key: String) -> URL {
+        let documentsDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return documentsDir.appendingPathComponent("\(key).png")
     }
 }
 
@@ -1233,5 +1612,32 @@ private extension String {
     var normalizedNilIfEmpty: String? {
         let trimmed = trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         return trimmed.isEmpty ? nil : trimmed
+    }
+}
+
+extension DashboardSnapshot {
+    func replacingSelfTasks(required: [TodoTask], optional: [TodoTask]) -> DashboardSnapshot {
+        DashboardSnapshot(
+            user: user,
+            partner: partner,
+            couple: couple,
+            selfContext: selfContext,
+            partnerContext: partnerContext,
+            selfRequired: required,
+            selfOptional: optional,
+            partnerRequired: partnerRequired,
+            partnerOptional: partnerOptional,
+            selfSubmittedNextPlan: selfSubmittedNextPlan,
+            partnerSubmittedNextPlan: partnerSubmittedNextPlan,
+            planningTargetDateKey: planningTargetDateKey,
+            selfPlanningCountdownMinutes: selfPlanningCountdownMinutes,
+            partnerPlanningCountdownMinutes: partnerPlanningCountdownMinutes,
+            selfSettlementCountdownMinutes: selfSettlementCountdownMinutes,
+            partnerSettlementCountdownMinutes: partnerSettlementCountdownMinutes,
+            latestSettlement: latestSettlement,
+            currentRewardWeek: currentRewardWeek,
+            pendingPayments: pendingPayments,
+            pendingGate: pendingGate
+        )
     }
 }

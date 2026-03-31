@@ -66,6 +66,7 @@ struct TaskEditorView: View {
 
     @State private var draft: TaskEditorDraft
     @State private var isSaving = false
+    @FocusState private var titleFocused: Bool
 
     init(
         state: TaskEditorSheetState,
@@ -80,53 +81,83 @@ struct TaskEditorView: View {
         }
     }
 
+    private var canSave: Bool {
+        draft.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false && isSaving == false
+    }
+
     var body: some View {
-        Form {
-            Section("Details") {
-                TextField("Title", text: $draft.title)
-                TextField("Notes", text: $draft.notes, axis: .vertical)
-                    .lineLimit(3...6)
+        ScrollView {
+            VStack(alignment: .leading, spacing: CoupleTheme.sectionSpacing) {
+                titleCard
+                categoryCard
             }
-
-            Section("Classification") {
-                Picker("Bucket", selection: $draft.bucket) {
-                    ForEach(TaskBucket.allCases, id: \.self) { bucket in
-                        Text(bucket.rawValue.capitalized).tag(bucket)
-                    }
-                }
-                .pickerStyle(.segmented)
-
-                Picker("Priority", selection: $draft.priority) {
-                    ForEach(TaskPriority.allCases, id: \.self) { priority in
-                        Text(priority.rawValue.uppercased()).tag(priority)
-                    }
-                }
-                .pickerStyle(.segmented)
-            }
-
-            Section {
-                Button(state.task == nil ? "Create Task" : "Save Changes") {
-                    Task {
-                        isSaving = true
-                        let didSave = await onSave(draft, state.task, state.dateKey, state.localTimezone)
-                        isSaving = false
-                        if didSave {
-                            dismiss()
-                        }
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(isSaving || draft.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 16)
         }
+        .safeAreaInset(edge: .bottom) {
+            Button(state.task == nil ? "Add Task" : "Save Changes", action: save)
+                .buttonStyle(PulseButtonStyle(canSave ? .active : .calm))
+                .disabled(canSave == false)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(.ultraThinMaterial)
+        }
+        .background(Color(.systemGroupedBackground))
         .navigationTitle(state.title)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
-                    dismiss()
-                }
-                .disabled(isSaving)
+                Button("Cancel") { dismiss() }
+                    .disabled(isSaving)
             }
+        }
+        .sensoryFeedback(.success, trigger: isSaving)
+        .onAppear { titleFocused = state.task == nil }
+    }
+
+    private var titleCard: some View {
+        CoupleCard(emphasis: .active) {
+            TextField("Task title", text: $draft.title)
+                .font(.title3.bold())
+                .fontDesign(.rounded)
+                .focused($titleFocused)
+                .submitLabel(.next)
+
+            TextField("Notes (optional)", text: $draft.notes, axis: .vertical)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .lineLimit(1...4)
+        }
+    }
+
+    private var categoryCard: some View {
+        CoupleCard(emphasis: .calm) {
+            Text("Category")
+                .font(.callout.bold())
+                .fontDesign(.rounded)
+                .foregroundStyle(.secondary)
+
+            Picker("Type", selection: $draft.bucket) {
+                ForEach(TaskBucket.allCases, id: \.self) { bucket in
+                    Text(bucket.rawValue.capitalized).tag(bucket)
+                }
+            }
+            .pickerStyle(.segmented)
+
+            Picker("Priority", selection: $draft.priority) {
+                ForEach(TaskPriority.allCases, id: \.self) { priority in
+                    Text(priority.rawValue.uppercased()).tag(priority)
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+    }
+
+    private func save() {
+        Task {
+            isSaving = true
+            let didSave = await onSave(draft, state.task, state.dateKey, state.localTimezone)
+            isSaving = false
+            if didSave { dismiss() }
         }
     }
 }

@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
 import { FieldValue, Timestamp, getFirestore } from "firebase-admin/firestore";
 import { MulticastMessage, getMessaging } from "firebase-admin/messaging";
 import { logger } from "firebase-functions";
@@ -1076,6 +1077,69 @@ export const markPaymentPaid = onCall(publicCallableOptions, async (request) => 
   };
 });
 
+export const deleteAccount = onCall(publicCallableOptions, async (request) => {
+  const uid = requireAuthUid(request);
+
+  const userRef = db.doc(`users/${uid}`);
+  const userSnapshot = await userRef.get();
+  const coupleId = asString(userSnapshot.get("coupleId"));
+
+  if (coupleId) {
+    const coupleRef = db.doc(`couples/${coupleId}`);
+    const coupleSnapshot = await coupleRef.get();
+    const memberIds = asStringArray(coupleSnapshot.get("memberIds"));
+
+    const subcollections = ["plans", "tasks", "settlements", "payments", "rewardWeeks", "events", "readModels"] as const;
+    for (const subcollection of subcollections) {
+      const snapshot = await db.collection(`couples/${coupleId}/${subcollection}`).get();
+      const batch = db.batch();
+      for (const doc of snapshot.docs) {
+        batch.delete(doc.ref);
+      }
+      if (snapshot.size > 0) {
+        await batch.commit();
+      }
+    }
+
+    const remainingMembers = memberIds.filter((id) => id !== uid);
+    if (remainingMembers.length === 0) {
+      await coupleRef.delete();
+    } else {
+      await coupleRef.set(
+        {
+          memberIds: remainingMembers,
+          status: "pending",
+          updatedAt: FieldValue.serverTimestamp(),
+        },
+        { merge: true },
+      );
+    }
+  }
+
+  const installationsSnapshot = await db.collection("deviceInstallations").where("userId", "==", uid).get();
+  const installationBatch = db.batch();
+  for (const doc of installationsSnapshot.docs) {
+    installationBatch.delete(doc.ref);
+  }
+  if (installationsSnapshot.size > 0) {
+    await installationBatch.commit();
+  }
+
+  await userRef.delete();
+
+  try {
+    await getAuth().deleteUser(uid);
+  } catch (error) {
+    logger.warn("Failed to delete Firebase Auth user (may already be deleted)", {
+      uid,
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+
+  logger.info("deleteAccount callable completed", { uid, coupleId: coupleId ?? "none" });
+  return { deleted: true };
+});
+
 const computeSettlementResult = (
   tasksSnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
   cutoff: Date,
@@ -1400,8 +1464,8 @@ export const planningReminderJob = onSchedule("every 5 minutes", async () => {
       jobType: "planningReminderJob",
       dedupeKey: `planning_${uid}_${targetDateKey}_${bucket}`,
       category,
-      title: "Tomorrow plan reminder",
-      body: "Fill out tomorrow's plan before cutoff.",
+      title: bucket === 0 ? "Mission window open" : "Final mission call",
+      body: bucket === 0 ? "Load tomorrow before cutoff." : "Submit tomorrow's mission now.",
       timeSensitive: prefs.timeSensitiveAllowed,
       data: {
         coupleId,
@@ -1515,8 +1579,8 @@ export const dailySettlementJob = onSchedule("every 5 minutes", async () => {
           jobType: "dailySettlementJob",
           dedupeKey: `settlement_${memberId}_${settlementId}`,
           category: "settlement_ready",
-          title: "Settlement ready",
-          body: "Today's settlement is ready for review.",
+          title: "Results ready",
+          body: "Review today's settlement.",
           timeSensitive: memberPrefs.timeSensitiveAllowed,
           data: {
             coupleId,
@@ -1539,8 +1603,8 @@ export const dailySettlementJob = onSchedule("every 5 minutes", async () => {
             jobType: "dailySettlementJob",
             dedupeKey: `payment_${creditorUserId}_${finalized.paymentRecordId}`,
             category: "payment_pending",
-            title: "Payment pending acknowledgement",
-            body: "A payment was marked for your review.",
+            title: "Payment needs review",
+            body: "A payment update is waiting.",
             timeSensitive: creditorPrefs.timeSensitiveAllowed,
             data: {
               coupleId,
@@ -1633,8 +1697,8 @@ export const weeklyRewardFinalizeJob = onSchedule("every 24 hours", async () => 
             jobType: "weeklyRewardFinalizeJob",
             dedupeKey: `reward_${memberId}_${rewardWeekKey}`,
             category: "reward_earned",
-            title: "Weekly reward earned",
-            body: "Both of you completed the week. Reward unlocked.",
+            title: "Reward unlocked",
+            body: "Your weekly reward is live.",
             timeSensitive: prefs.timeSensitiveAllowed,
             data: {
               coupleId,

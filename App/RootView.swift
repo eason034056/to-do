@@ -7,7 +7,7 @@ struct RootView: View {
         Group {
             switch coordinator.phase {
             case .loading:
-                ProgressView("Loading Couple Todo")
+                ProgressView("Loading...")
                     .task {
                         await coordinator.bootstrapIfNeeded()
                     }
@@ -16,15 +16,10 @@ struct RootView: View {
             case .pairing:
                 PairingView(coordinator: coordinator)
             case .ready:
-                NavigationStack(path: $coordinator.path) {
-                    DashboardView(coordinator: coordinator)
-                        .navigationDestination(for: AppRoute.self) { route in
-                            destination(for: route)
-                        }
-                }
-                .task {
-                    await coordinator.bootstrapIfNeeded()
-                }
+                mainTabView
+                    .task {
+                        await coordinator.bootstrapIfNeeded()
+                    }
             }
         }
         .onOpenURL { url in
@@ -45,25 +40,54 @@ struct RootView: View {
             }
             .interactiveDismissDisabled(coordinator.canDismissCurrentFullScreenRoute() == false)
         }
+        .sensoryFeedback(.selection, trigger: coordinator.selectedTab)
         .alert(
             "CoupleTodo",
             isPresented: Binding(
                 get: { coordinator.latestError != nil },
-                set: { newValue in
-                    if newValue == false {
-                        coordinator.clearLatestError()
-                    }
-                }
-            ),
-            actions: {
-                Button("OK", role: .cancel) {
-                    coordinator.clearLatestError()
-                }
-            },
-            message: {
-                Text(coordinator.latestError ?? "")
+                set: { if $0 == false { coordinator.clearLatestError() } }
+            )
+        ) {
+            Button("OK", role: .cancel) {
+                coordinator.clearLatestError()
             }
-        )
+        } message: {
+            Text(coordinator.latestError ?? "")
+        }
+    }
+
+    private var mainTabView: some View {
+        TabView(selection: $coordinator.selectedTab) {
+            Tab("Today", systemImage: "checklist", value: AppCoordinator.AppTab.today) {
+                NavigationStack(path: $coordinator.path) {
+                    TodayView(coordinator: coordinator)
+                        .navigationDestination(for: AppRoute.self) { route in
+                            destination(for: route)
+                        }
+                }
+            }
+
+            Tab("Plan", systemImage: "calendar.badge.plus", value: AppCoordinator.AppTab.plan) {
+                NavigationStack {
+                    PlanningTabView(coordinator: coordinator)
+                }
+            }
+
+            Tab("Us", systemImage: "heart.fill", value: AppCoordinator.AppTab.us) {
+                NavigationStack {
+                    UsView(coordinator: coordinator)
+                        .navigationDestination(for: AppRoute.self) { route in
+                            destination(for: route)
+                        }
+                }
+            }
+
+            Tab("Settings", systemImage: "gearshape.fill", value: AppCoordinator.AppTab.settings) {
+                NavigationStack {
+                    SettingsView(coordinator: coordinator)
+                }
+            }
+        }
     }
 
     @ViewBuilder
@@ -74,7 +98,7 @@ struct RootView: View {
         case .pairing:
             PairingView(coordinator: coordinator)
         case .dashboard:
-            DashboardView(coordinator: coordinator)
+            TodayView(coordinator: coordinator)
         case let .planning(dateKey):
             PlanningView(coordinator: coordinator, dateKey: dateKey)
         case let .settlement(dateKey):

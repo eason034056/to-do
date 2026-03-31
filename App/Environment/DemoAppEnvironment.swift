@@ -17,6 +17,7 @@ struct AppEnvironment {
     let paymentRepository: any PaymentRepository
     let eventRepository: any EventRepository
     let sharedSnapshotWriter: SharedSnapshotWriter
+    let networkMonitor: any NetworkMonitor
     let nowProvider: () -> Date
 
     @MainActor
@@ -124,6 +125,7 @@ struct AppEnvironment {
             paymentRepository: services.paymentRepository,
             eventRepository: services.eventRepository,
             sharedSnapshotWriter: SharedSnapshotWriter(),
+            networkMonitor: NWPathNetworkMonitor(),
             nowProvider: Date.init
         )
     }
@@ -359,8 +361,8 @@ struct AppEnvironment {
             rewardWeekRepository: MemoryRewardWeekRepository(seed: rewardWeeks),
             paymentRepository: MemoryPaymentRepository(seed: []),
             eventRepository: MemoryEventRepository(seed: []),
-            sharedSnapshotWriter: SharedSnapshotWriter()
-            ,
+            sharedSnapshotWriter: SharedSnapshotWriter(),
+            networkMonitor: StubNetworkMonitor(),
             nowProvider: Date.init
         )
     }
@@ -426,6 +428,8 @@ private final class DemoCoupleLifecycleGateway: CoupleLifecycleGateway {
             inviteCode: result.inviteCode
         )
     }
+
+    func deleteAccount() async throws {}
 
     func joinCouple(inviteCode: String) async throws -> PairingResult {
         let couple = try await JoinCoupleUseCase(
