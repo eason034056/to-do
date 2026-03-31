@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoupleTodo — Shared Tasks & Accountability</title>
+    <meta name="description" content="Plan tasks together, hold each other accountable, and earn shared rewards. The daily routine that helps couples follow through.">
+    <style>
+        :root {
+            --navy: #2C3040;
+            --navy-light: #3D4258;
+            --white: #FFFFFF;
+            --gray-50: #F8F9FA;
+            --gray-100: #F1F3F5;
+            --gray-400: #ADB5BD;
+            --gray-600: #868E96;
+            --gray-800: #343A40;
+            --accent: #5B7FFF;
+            --accent-light: #EEF2FF;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            color: var(--gray-800);
+            background: var(--white);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(160deg, var(--navy) 0%, var(--navy-light) 100%);
+            color: var(--white);
+            text-align: center;
+            padding: 80px 24px 60px;
+        }
+
+        .hero-icon {
+            width: 120px;
+            height: 120px;
+            border-radius: 27px;
+            margin-bottom: 32px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+
+        .hero .subtitle {
+            font-size: 20px;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-bottom: 36px;
+        }
+
+        .hero .tagline {
+            font-size: 16px;
+            max-width: 520px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+            opacity: 0.75;
+        }
+
+        .badge {
+            display: inline-block;
+        }
+
+        .badge img {
+            height: 54px;
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 24px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 48px;
+            color: var(--navy);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: var(--gray-50);
+            border-radius: 16px;
+            padding: 32px 28px;
+        }
+
+        .feature-card .icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--navy);
+        }
+
+        .feature-card p {
+            font-size: 15px;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: var(--gray-50);
+            padding: 80px 24px;
+        }
+
+        .how-it-works .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 48px;
+            color: var(--navy);
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--navy);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .step-content h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--navy);
+        }
+
+        .step-content p {
+            font-size: 15px;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 80px 24px;
+        }
+
+        .cta h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+
+        .cta p {
+            font-size: 16px;
+            color: var(--gray-600);
+            margin-bottom: 32px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--navy);
+            color: var(--gray-400);
+            text-align: center;
+            padding: 32px 24px;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: var(--gray-400);
+            text-decoration: none;
+            margin: 0 12px;
+        }
+
+        footer a:hover {
+            color: var(--white);
+        }
+
+        footer .links {
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 32px; }
+            .hero .subtitle { font-size: 17px; }
+            .features h2, .how-it-works h2 { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+<section class="hero">
+    <img class="hero-icon" src="app-icon.png" alt="CoupleTodo App Icon">
+    <h1>CoupleTodo</h1>
+    <p class="subtitle">Shared Tasks & Accountability</p>
+    <p class="tagline">Plan tasks together, hold each other accountable, and earn shared rewards. The daily routine that helps couples follow through.</p>
+</section>
+
+<section class="features">
+    <h2>Features</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <div class="icon">&#128221;</div>
+            <h3>Plan Together</h3>
+            <p>Draft tomorrow's required and optional tasks before the daily cutoff. See when your partner has submitted too.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#9989;</div>
+            <h3>Daily Settlement</h3>
+            <p>An automatic daily recap evaluates your task completion. Pass by finishing all required tasks, or face a penalty you both agreed on.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#127873;</div>
+            <h3>Rewards System</h3>
+            <p>Set a weekly reward together. Both partners must stay on track all week to earn it.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128241;</div>
+            <h3>Widgets & Live Activities</h3>
+            <p>Glance at your progress from your Home Screen or Lock Screen with real-time updates.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128259;</div>
+            <h3>Real-Time Sync</h3>
+            <p>Every task update, plan submission, and settlement syncs instantly between partners.</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">&#128276;</div>
+            <h3>Smart Notifications</h3>
+            <p>Planning reminders, settlement results, reward updates, and payment alerts — all customizable.</p>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <div class="container">
+        <h2>How It Works</h2>
+        <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h3>Sign in & pair up</h3>
+                <p>Create your account and generate an invite code. Share it with your partner to link up.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h3>Plan tomorrow's tasks</h3>
+                <p>Each evening, both of you draft tasks before a shared cutoff time.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h3>Complete & settle</h3>
+                <p>Check off tasks during the day. At day's end, a settlement shows how you both did.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h3>Earn rewards together</h3>
+                <p>Stay on track all week and unlock a shared reward you both set together.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <h2>Start planning together</h2>
+    <p>Turn daily chores into a shared commitment.</p>
+</section>
+
+<footer>
+    <div class="links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="mailto:eason034056@gmail.com">Contact</a>
+    </div>
+    <p>&copy; 2026 CoupleTodo. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

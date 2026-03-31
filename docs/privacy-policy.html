@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy — CoupleTodo</title>
+    <style>
+        :root {
+            --navy: #2C3040;
+            --white: #FFFFFF;
+            --gray-50: #F8F9FA;
+            --gray-600: #868E96;
+            --gray-800: #343A40;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+            color: var(--gray-800);
+            background: var(--white);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background: var(--navy);
+            color: var(--white);
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        header a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+
+        .content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .content h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-top: 40px;
+            margin-bottom: 12px;
+        }
+
+        .content h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--navy);
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+
+        .content p {
+            margin-bottom: 12px;
+            color: var(--gray-800);
+        }
+
+        .content ul {
+            margin: 8px 0 16px 24px;
+        }
+
+        .content li {
+            margin-bottom: 6px;
+        }
+
+        .content a {
+            color: #5B7FFF;
+        }
+
+        .content strong {
+            font-weight: 600;
+        }
+
+        .last-updated {
+            color: var(--gray-600);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        footer {
+            background: var(--gray-50);
+            text-align: center;
+            padding: 24px;
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        footer a {
+            color: var(--gray-600);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--navy);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html">CoupleTodo</a>
+    <h1>Privacy Policy</h1>
+</header>
+
+<div class="content">
+    <p class="last-updated">Last updated: March 28, 2026</p>
+
+    <h2>Introduction</h2>
+    <p>CoupleTodo ("we", "our", or "the app") respects your privacy. This Privacy Policy explains what information we collect, how we use it, and the choices you have.</p>
+
+    <h2>Information We Collect</h2>
+
+    <h3>Account Information</h3>
+    <p>When you create an account, we collect:</p>
+    <ul>
+        <li>Your name and email address (provided through Apple Sign-In or Google Sign-In)</li>
+        <li>A display name you choose within the app</li>
+    </ul>
+
+    <h3>App Data</h3>
+    <p>When you use the app, we store:</p>
+    <ul>
+        <li>Tasks you create (titles, notes, completion status)</li>
+        <li>Planning submissions and settlement results</li>
+        <li>Reward descriptions and eligibility status</li>
+        <li>Payment records between partners</li>
+        <li>Your couple pairing information (invite code, partner link)</li>
+        <li>Your timezone and device settings relevant to app functionality</li>
+    </ul>
+
+    <h3>Device Information</h3>
+    <p>We collect:</p>
+    <ul>
+        <li>Push notification tokens (to deliver notifications)</li>
+        <li>Your device timezone (to calculate daily deadlines correctly)</li>
+    </ul>
+
+    <h2>How We Use Your Information</h2>
+    <p>We use your information solely to:</p>
+    <ul>
+        <li>Provide and operate the app's features (task management, planning, settlements, rewards)</li>
+        <li>Sync data between you and your partner in real time</li>
+        <li>Send push notifications you have enabled (planning reminders, settlement results, payment alerts)</li>
+        <li>Authenticate your account</li>
+    </ul>
+
+    <p>We do <strong>not</strong>:</p>
+    <ul>
+        <li>Sell your personal information to third parties</li>
+        <li>Use your data for advertising</li>
+        <li>Track you across other apps or websites</li>
+        <li>Share your data with anyone other than your linked partner within the app</li>
+    </ul>
+
+    <h2>Third-Party Services</h2>
+    <p>We use the following third-party services:</p>
+
+    <h3>Firebase (Google)</h3>
+    <ul>
+        <li><strong>Firebase Authentication</strong> — to manage sign-in</li>
+        <li><strong>Cloud Firestore</strong> — to store and sync your app data</li>
+        <li><strong>Firebase Cloud Messaging</strong> — to deliver push notifications</li>
+        <li><strong>Firebase Cloud Functions</strong> — to run server-side logic (settlements, notifications)</li>
+    </ul>
+    <p>Firebase processes data in accordance with <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>.</p>
+
+    <h3>Apple Sign-In / Google Sign-In</h3>
+    <p>Used for authentication only. We receive your name and email address from the identity provider you choose.</p>
+
+    <h2>Data Storage and Security</h2>
+    <p>Your data is stored in Google Cloud Firestore with security rules that ensure:</p>
+    <ul>
+        <li>You can only read and write your own data</li>
+        <li>Partner data is accessible only within your linked couple</li>
+        <li>All data is transmitted over encrypted connections (HTTPS/TLS)</li>
+    </ul>
+
+    <h2>Data Retention</h2>
+    <p>We retain your data for as long as your account is active. If you wish to delete your account and all associated data, please contact us at the email below.</p>
+
+    <h2>Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+        <li>Access the personal data we hold about you</li>
+        <li>Request correction of inaccurate data</li>
+        <li>Request deletion of your account and data</li>
+        <li>Withdraw consent for push notifications at any time through your device settings</li>
+    </ul>
+
+    <h2>Children's Privacy</h2>
+    <p>CoupleTodo is not intended for children under 13. We do not knowingly collect information from children under 13.</p>
+
+    <h2>Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. We will notify you of significant changes through the app or by other means.</p>
+
+    <h2>Contact Us</h2>
+    <p>If you have questions about this Privacy Policy or your data, please contact us at:</p>
+    <p><strong>Email:</strong> <a href="mailto:eason034056@gmail.com">eason034056@gmail.com</a></p>
+</div>
+
+<footer>
+    <a href="index.html">&larr; Back to CoupleTodo</a>
+    <p style="margin-top: 12px;">&copy; 2026 CoupleTodo. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
