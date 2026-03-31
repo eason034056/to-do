@@ -15,26 +15,30 @@ final class CoupleTodoUITests: XCTestCase {
     func testAuthScreen_showsContinueWithApple() throws {
         app.launch()
         let appleButton = app.buttons["Continue with Apple"]
-        XCTAssertTrue(appleButton.waitForExistence(timeout: 5), "Auth 畫面應顯示 Continue with Apple 按鈕")
+        XCTAssertTrue(appleButton.waitForExistence(timeout: 5), "Auth screen should show Continue with Apple button")
     }
 
-    // MARK: - Dashboard
+    // MARK: - Today Tab
 
-    func testDashboard_showsAfterLogin() throws {
+    func testToday_showsAfterLogin() throws {
         app.launchArguments.append("-DemoMode")
         app.launch()
 
-        let dashboardTitle = app.staticTexts["Dashboard"]
-        XCTAssertTrue(dashboardTitle.waitForExistence(timeout: 10), "Dashboard 標題應出現")
+        let todayTitle = app.navigationBars["Today"]
+        XCTAssertTrue(todayTitle.waitForExistence(timeout: 10), "Today tab should appear")
     }
 
-    func testDashboard_showsPendingPayments() throws {
+    func testToday_showsPendingPayments() throws {
         app.launchArguments.append("-DemoMode")
         app.launch()
+
+        let usTab = app.tabBars.buttons["Us"]
+        guard usTab.waitForExistence(timeout: 5) else { return }
+        usTab.tap()
 
         let paymentsSection = app.staticTexts["Pending Payments"]
         if paymentsSection.waitForExistence(timeout: 5) {
-            XCTAssertTrue(paymentsSection.exists, "有 pending payment 時應顯示 Pending Payments 區塊")
+            XCTAssertTrue(paymentsSection.exists, "Us tab should show Pending Payments section")
         }
     }
 
@@ -44,14 +48,12 @@ final class CoupleTodoUITests: XCTestCase {
         app.launchArguments.append("-DemoMode")
         app.launch()
 
-        let planButton = app.buttons["Plan Tomorrow"]
-        guard planButton.waitForExistence(timeout: 5) else {
-            return
-        }
-        planButton.tap()
+        let planTab = app.tabBars.buttons["Plan"]
+        guard planTab.waitForExistence(timeout: 5) else { return }
+        planTab.tap()
 
-        let addButton = app.buttons["Add Task"]
-        XCTAssertTrue(addButton.waitForExistence(timeout: 5), "Planning 頁應有 Add Task 按鈕")
+        let addButton = app.buttons["Add"]
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5), "Planning tab should have Add button")
     }
 
     // MARK: - Settlement Gate
@@ -61,13 +63,11 @@ final class CoupleTodoUITests: XCTestCase {
         app.launchArguments.append("-ForcePendingSettlement")
         app.launch()
 
-        let settlementTitle = app.staticTexts["Daily Settlement"]
-        guard settlementTitle.waitForExistence(timeout: 5) else {
-            return
-        }
+        let settlementTitle = app.navigationBars["Daily Recap"]
+        guard settlementTitle.waitForExistence(timeout: 5) else { return }
 
         app.swipeDown()
-        XCTAssertTrue(settlementTitle.exists, "Settlement gate 不應被 swipe down 關閉")
+        XCTAssertTrue(settlementTitle.exists, "Settlement gate should not be dismissed by swipe down")
     }
 
     // MARK: - Settings
@@ -76,14 +76,12 @@ final class CoupleTodoUITests: XCTestCase {
         app.launchArguments.append("-DemoMode")
         app.launch()
 
-        let settingsTab = app.buttons["Settings"]
-        guard settingsTab.waitForExistence(timeout: 5) else {
-            return
-        }
+        let settingsTab = app.tabBars.buttons["Settings"]
+        guard settingsTab.waitForExistence(timeout: 5) else { return }
         settingsTab.tap()
 
         let timezoneLabel = app.staticTexts.matching(identifier: "deviceTimezone")
-        XCTAssertTrue(timezoneLabel.firstMatch.waitForExistence(timeout: 5), "Settings 應顯示 device timezone")
+        XCTAssertTrue(timezoneLabel.firstMatch.waitForExistence(timeout: 5), "Settings should show device timezone")
     }
 
     // MARK: - Offline Banner
@@ -93,9 +91,9 @@ final class CoupleTodoUITests: XCTestCase {
         app.launchArguments.append("-SimulateOffline")
         app.launch()
 
-        let offlineBanner = app.staticTexts["You're offline. Changes will sync when connection returns."]
+        let offlineBanner = app.staticTexts["You're offline"]
         if offlineBanner.waitForExistence(timeout: 5) {
-            XCTAssertTrue(offlineBanner.exists, "離線時應顯示 offline banner")
+            XCTAssertTrue(offlineBanner.exists, "Offline banner should be visible when offline")
         }
     }
 
@@ -105,13 +103,15 @@ final class CoupleTodoUITests: XCTestCase {
         app.launchArguments.append("-DemoMode")
         app.launch()
 
-        let rewardsTab = app.buttons["Rewards"]
-        guard rewardsTab.waitForExistence(timeout: 5) else {
-            return
-        }
-        rewardsTab.tap()
+        let usTab = app.tabBars.buttons["Us"]
+        guard usTab.waitForExistence(timeout: 5) else { return }
+        usTab.tap()
+
+        let rewardLink = app.buttons["View Reward Details"]
+        guard rewardLink.waitForExistence(timeout: 5) else { return }
+        rewardLink.tap()
 
         let eligibilityLabel = app.staticTexts.matching(identifier: "eligibilityMatrix")
-        XCTAssertTrue(eligibilityLabel.firstMatch.waitForExistence(timeout: 5), "Rewards 應顯示 eligibility 矩陣")
+        XCTAssertTrue(eligibilityLabel.firstMatch.waitForExistence(timeout: 5), "Rewards should show eligibility matrix")
     }
 }

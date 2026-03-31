@@ -7,10 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		071A71572B1532366DAB96C4 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86D1677B673C1E3E1983423 /* Animations.swift */; };
+		0B964F8AF9130A1AFF47AA63 /* CountdownBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D107B3E4268870FB3DB3B54 /* CountdownBubble.swift */; };
+		15B0A720FF009EE568DD773B /* TaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A52DED786A3F8DAC0639B734 /* TaskRow.swift */; };
+		1F4386F361EB0151BB38C26D /* CoupleCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2676D5586DFD8FC92F1F6C1 /* CoupleCard.swift */; };
+		1F894B42310DE8BBF9D4BE39 /* DashboardPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE113CE77D21031AB1769033 /* DashboardPresenter.swift */; };
+		20AD27D3E0286395F785D108 /* DashboardPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDD9C5C01F45E2DDE5B5D5AD /* DashboardPresenterTests.swift */; };
 		22DBE3CBE9837393B0D0BD84 /* SharedSnapshotReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D00C8D8ACE4787E5271A056 /* SharedSnapshotReader.swift */; };
+		22E043EA601C944C1ACCA4C4 /* MissionControlPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B192186676E7DB9D28BCF2 /* MissionControlPresentation.swift */; };
 		275DFA9F697745D7D0F3373B /* CoupleTodoWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D7DD08819DE2EDCC1BBEC445 /* CoupleTodoWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2AE537983EDBEA9089CF93DA /* AvatarPair.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC201D3F1A9D1A49FF50B70 /* AvatarPair.swift */; };
+		2C793B8FE75CC584A5F91E92 /* ProgressRing.swift in Sources */ = {isa = PBXBuildFile; fileRef = B818FDE7BC495A5F53CEA206 /* ProgressRing.swift */; };
 		31E4BACC7AAFEBE11D9AC379 /* InMemoryRepositories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D01B8FAE5CF89513E7B61D7 /* InMemoryRepositories.swift */; };
 		32518095D899D39C58F3B638 /* DailySettlementActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A11E2B0B9723D81E2311F70 /* DailySettlementActivity.swift */; };
+		3E5D1FD04FA82D0F7C177E10 /* CoupleTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0F7FA74897A101CE648D88 /* CoupleTheme.swift */; };
+		438CCD6A50A014B9ABADEC7C /* QuickAddRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45246F6BA3B7B1E35C28ADE5 /* QuickAddRow.swift */; };
+		453B1CA2F1269E5B36C6E839 /* UsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8AF57C32B57A9B42BB3551 /* UsView.swift */; };
+		48AA784F9D86BAE55BD15B03 /* PulseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 415FE597AA5096E764DE9059 /* PulseButton.swift */; };
 		4A032ADDA5EA885D47CC9E4D /* RewardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA9F33E6949BA44CDE62FE4 /* RewardsView.swift */; };
 		4C21F8C74B78F058299133D8 /* PlanningReminderActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 870009AACCE5636E9893D680 /* PlanningReminderActivity.swift */; };
 		4EC56B20B70277FFA473ACDF /* AppRoute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD54F2A18FCB6541AFE5ACB /* AppRoute.swift */; };
@@ -20,27 +33,49 @@
 		6460C32C255051FB54C02FE7 /* PlanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F56C09285AFB12CDEF6229 /* PlanningView.swift */; };
 		744381513445BA8E175FAFFB /* CoupleTodoCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9ECC0F2354AD194C7476393F /* CoupleTodoCore */; };
 		75AFB9CC11563BCFCDAC8B54 /* DemoAppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB509747D19F1B33B98BD1D /* DemoAppEnvironment.swift */; };
+		7710C8FA17796EBF1D407005 /* MissionControlComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54570EC195776512E439B867 /* MissionControlComponents.swift */; };
 		8061C2F3B88BB169AA263AE0 /* FirebaseAuthenticationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2EC61AC2FC42DF07988B08C /* FirebaseAuthenticationServiceTests.swift */; };
 		82E9E00DBBCF396983AE4602 /* AppCoordinatorAuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F37B79BE17EBB33DF75718E /* AppCoordinatorAuthTests.swift */; };
+		8D294C0F58D27D35F02F3EEA /* MissionControlPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DE70DBCAD5E7EBEE7BE230 /* MissionControlPresentationTests.swift */; };
+		998EF145B90EA4A64E5EBDB3 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FCFF7596816C9BE44F57F74 /* TodayView.swift */; };
 		9FFDC2E1033E73C0B9100252 /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F9B5A6C1E521573DBFAB54 /* PairingView.swift */; };
 		A16D156D7992777A0B1E68BB /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0C92AA06882DB675B50BCBB /* DashboardView.swift */; };
 		A1B249F3AA52603B100CC834 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1C1B50DBAD40124CE8ECE122 /* GoogleService-Info.plist */; };
+		A1B3C4D5E6F708192A3B4C01 /* TodayHeroSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F70819203A01 /* TodayHeroSection.swift */; };
+		A1B3C4D5E6F708192A3B4C02 /* TaskSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F70819203A02 /* TaskSectionHeaderView.swift */; };
+		A1B3C4D5E6F708192A3B4C03 /* TaskSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F70819203A03 /* TaskSectionView.swift */; };
+		A1B3C4D5E6F708192A3B4C04 /* EditableTaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F70819203A04 /* EditableTaskRow.swift */; };
+		A1B3C4D5E6F708192A3B4C05 /* PartnerBoardSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F70819203A05 /* PartnerBoardSection.swift */; };
 		A40DF860D79F7343FFA942E6 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7585BA38B87A3C09D055E3 /* RootView.swift */; };
 		A78525E89D5BEDC59BBBDA3D /* TaskEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D791394AF906C721B0BA6BA /* TaskEditorView.swift */; };
+		AA00BB11CC22DD33EE44FF03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA00BB11CC22DD33EE44FF01 /* Assets.xcassets */; };
+		AA00BB11CC22DD33EE44FF04 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA00BB11CC22DD33EE44FF02 /* PrivacyInfo.xcprivacy */; };
+		AA11BB22CC33DD4455FF0001 /* DeadlineBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB22CC33DD4455EE0001 /* DeadlineBanner.swift */; };
+		AA11BB22CC33DD4455FF0002 /* AvatarProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB22CC33DD4455EE0002 /* AvatarProcessor.swift */; };
+		AA11BB22CC33DD4455FF0003 /* AvatarPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB22CC33DD4455EE0003 /* AvatarPickerView.swift */; };
+		AA11BB22CC33DD4455FF0099 /* SwipeToDeleteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA11BB22CC33DD4455EE0099 /* SwipeToDeleteRow.swift */; };
 		AF18BD13228E48607275F971 /* CoupleTodoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B76D6658B6634C10EC78FF81 /* CoupleTodoWidget.swift */; };
 		B6DAE817989E164E8A102EA4 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F326BFA7D7B4C4CCE33C85 /* AppCoordinator.swift */; };
 		B8664ECF73369AF2EBDAB1D7 /* CoupleTodoFirebase in Frameworks */ = {isa = PBXBuildFile; productRef = 012EE7B8990696D00F929D8E /* CoupleTodoFirebase */; };
 		BADC1770C63F1CA2864DFFAF /* CoupleTodoAppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036A09A218C18FC2B4459A33 /* CoupleTodoAppIntents.swift */; };
+		BB11CC22DD33EE4455FF0001 /* SettlementPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11CC22DD33EE4455EE0001 /* SettlementPresenter.swift */; };
+		BB11CC22DD33EE4455FF0002 /* PlanningPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11CC22DD33EE4455EE0002 /* PlanningPresenter.swift */; };
+		BB11CC22DD33EE4455FF0003 /* SettlementPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11CC22DD33EE4455EE0003 /* SettlementPresenterTests.swift */; };
+		BB11CC22DD33EE4455FF0004 /* PlanningPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11CC22DD33EE4455EE0004 /* PlanningPresenterTests.swift */; };
+		BB11CC22DD33EE4455FF0005 /* CoupleGradients.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11CC22DD33EE4455EE0005 /* CoupleGradients.swift */; };
 		BE492CB72C9E02BAA788126D /* DeepLinkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853A1FC474CF94D032721496 /* DeepLinkRouter.swift */; };
 		C086123786B6128B60D12892 /* SettlementHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213C11857BEFCA96D0373225 /* SettlementHistoryView.swift */; };
 		C16BDB8AFD4AB45F2D6DE18D /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5BA60C46FC959725EA4A5F /* AuthView.swift */; };
 		CCF3836A749020D45AB08E21 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62C0A1A47970B8450D80047 /* NotificationService.swift */; };
+		D10524938A3FAC529730DA21 /* PlanningTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6452F7C223BA42176A6A200 /* PlanningTabView.swift */; };
+		D208BDF4A5C627625C2D5AE2 /* StatusPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742DE3968DBE3224A60811CB /* StatusPill.swift */; };
 		D4C413F391ED18CFF51F9447 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF749D9CF9B9F2AE48405B1 /* SettingsView.swift */; };
 		D853ADFCF96765E28371E2EC /* CoupleTodoCore in Frameworks */ = {isa = PBXBuildFile; productRef = E0B7766AAED04BFA31219462 /* CoupleTodoCore */; };
 		E42A5B7BADC16DFF0492E77A /* OfflineBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41C62D01DF91CFE771599694 /* OfflineBannerView.swift */; };
 		E9255D92C178830AD701A23E /* AppMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA9A2B76E1F281759802E1C /* AppMain.swift */; };
 		ECB70AC2A586C0248A3A79C4 /* PaymentAcknowledgementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75569C4B652CAA4E692B4F01 /* PaymentAcknowledgementView.swift */; };
 		EFAD51D378FCA86AD40FC121 /* SharedSnapshotWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D2DB83562C4B80513A51CE /* SharedSnapshotWriter.swift */; };
+		FD443D578DC12E4F8F71A3A1 /* CelebrationOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D6E46F0C58596E42017CB8 /* CelebrationOverlay.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,42 +117,77 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		01B192186676E7DB9D28BCF2 /* MissionControlPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionControlPresentation.swift; sourceTree = "<group>"; };
 		036A09A218C18FC2B4459A33 /* CoupleTodoAppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleTodoAppIntents.swift; sourceTree = "<group>"; };
 		0D00C8D8ACE4787E5271A056 /* SharedSnapshotReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSnapshotReader.swift; sourceTree = "<group>"; };
-		154BDCF054F285B6DC7EB31D /* CoupleTodo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CoupleTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		14DE70DBCAD5E7EBEE7BE230 /* MissionControlPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionControlPresentationTests.swift; sourceTree = "<group>"; };
+		154BDCF054F285B6DC7EB31D /* CoupleTodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoupleTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AD54F2A18FCB6541AFE5ACB /* AppRoute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRoute.swift; sourceTree = "<group>"; };
 		1C1B50DBAD40124CE8ECE122 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		213C11857BEFCA96D0373225 /* SettlementHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementHistoryView.swift; sourceTree = "<group>"; };
+		24D6E46F0C58596E42017CB8 /* CelebrationOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CelebrationOverlay.swift; sourceTree = "<group>"; };
 		27D482112DC4EEB509FE14FB /* CoupleTodoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleTodoUITests.swift; sourceTree = "<group>"; };
 		2AA9F33E6949BA44CDE62FE4 /* RewardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RewardsView.swift; sourceTree = "<group>"; };
 		2AB509747D19F1B33B98BD1D /* DemoAppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoAppEnvironment.swift; sourceTree = "<group>"; };
 		2CF749D9CF9B9F2AE48405B1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		38F9B5A6C1E521573DBFAB54 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
+		3A0F7FA74897A101CE648D88 /* CoupleTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleTheme.swift; sourceTree = "<group>"; };
 		3A11E2B0B9723D81E2311F70 /* DailySettlementActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailySettlementActivity.swift; sourceTree = "<group>"; };
+		415FE597AA5096E764DE9059 /* PulseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseButton.swift; sourceTree = "<group>"; };
 		41C62D01DF91CFE771599694 /* OfflineBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineBannerView.swift; sourceTree = "<group>"; };
+		45246F6BA3B7B1E35C28ADE5 /* QuickAddRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickAddRow.swift; sourceTree = "<group>"; };
 		45F326BFA7D7B4C4CCE33C85 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		54570EC195776512E439B867 /* MissionControlComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionControlComponents.swift; sourceTree = "<group>"; };
 		56B96CFAEE79508EF67FC72D /* to-do */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "to-do"; path = .; sourceTree = SOURCE_ROOT; };
 		5D01B8FAE5CF89513E7B61D7 /* InMemoryRepositories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryRepositories.swift; sourceTree = "<group>"; };
 		5F37B79BE17EBB33DF75718E /* AppCoordinatorAuthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinatorAuthTests.swift; sourceTree = "<group>"; };
+		5FCFF7596816C9BE44F57F74 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		6C7585BA38B87A3C09D055E3 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		742DE3968DBE3224A60811CB /* StatusPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusPill.swift; sourceTree = "<group>"; };
 		75569C4B652CAA4E692B4F01 /* PaymentAcknowledgementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAcknowledgementView.swift; sourceTree = "<group>"; };
 		78393C8499FCD492088510D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		853A1FC474CF94D032721496 /* DeepLinkRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRouter.swift; sourceTree = "<group>"; };
 		870009AACCE5636E9893D680 /* PlanningReminderActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanningReminderActivity.swift; sourceTree = "<group>"; };
+		8D107B3E4268870FB3DB3B54 /* CountdownBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownBubble.swift; sourceTree = "<group>"; };
 		8D791394AF906C721B0BA6BA /* TaskEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorView.swift; sourceTree = "<group>"; };
-		8DEEA641F96EF62DAF54CC02 /* GoogleService-Info.plist.example */ = {isa = PBXFileReference; path = "GoogleService-Info.plist.example"; sourceTree = "<group>"; };
+		8DEEA641F96EF62DAF54CC02 /* GoogleService-Info.plist.example */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "GoogleService-Info.plist.example"; sourceTree = "<group>"; };
 		963E5E849A85604E0DF547F8 /* CoupleTodoUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CoupleTodoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C5BA60C46FC959725EA4A5F /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		9DA287294C2DF3ECDA6604E0 /* CoupleTodoWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CoupleTodoWidget.entitlements; sourceTree = "<group>"; };
 		A0C92AA06882DB675B50BCBB /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		A52DED786A3F8DAC0639B734 /* TaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRow.swift; sourceTree = "<group>"; };
+		A6452F7C223BA42176A6A200 /* PlanningTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanningTabView.swift; sourceTree = "<group>"; };
 		A8F56C09285AFB12CDEF6229 /* PlanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanningView.swift; sourceTree = "<group>"; };
+		AA00BB11CC22DD33EE44FF01 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA00BB11CC22DD33EE44FF02 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		AA11BB22CC33DD4455EE0001 /* DeadlineBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadlineBanner.swift; sourceTree = "<group>"; };
+		AA11BB22CC33DD4455EE0002 /* AvatarProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarProcessor.swift; sourceTree = "<group>"; };
+		AA11BB22CC33DD4455EE0003 /* AvatarPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarPickerView.swift; sourceTree = "<group>"; };
+		AA11BB22CC33DD4455EE0099 /* SwipeToDeleteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeToDeleteRow.swift; sourceTree = "<group>"; };
 		B6B72DCDAB9A3DA8D803F37E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B76D6658B6634C10EC78FF81 /* CoupleTodoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleTodoWidget.swift; sourceTree = "<group>"; };
+		B818FDE7BC495A5F53CEA206 /* ProgressRing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressRing.swift; sourceTree = "<group>"; };
+		BB11CC22DD33EE4455EE0001 /* SettlementPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementPresenter.swift; sourceTree = "<group>"; };
+		BB11CC22DD33EE4455EE0002 /* PlanningPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanningPresenter.swift; sourceTree = "<group>"; };
+		BB11CC22DD33EE4455EE0003 /* SettlementPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementPresenterTests.swift; sourceTree = "<group>"; };
+		BB11CC22DD33EE4455EE0004 /* PlanningPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanningPresenterTests.swift; sourceTree = "<group>"; };
+		BB11CC22DD33EE4455EE0005 /* CoupleGradients.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleGradients.swift; sourceTree = "<group>"; };
+		BDD9C5C01F45E2DDE5B5D5AD /* DashboardPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardPresenterTests.swift; sourceTree = "<group>"; };
 		BFADF512AB01B6CFDC20F6DC /* CoupleTodoAppTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CoupleTodoAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D2DB83562C4B80513A51CE /* SharedSnapshotWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSnapshotWriter.swift; sourceTree = "<group>"; };
+		CE113CE77D21031AB1769033 /* DashboardPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardPresenter.swift; sourceTree = "<group>"; };
+		D2676D5586DFD8FC92F1F6C1 /* CoupleCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoupleCard.swift; sourceTree = "<group>"; };
 		D62C0A1A47970B8450D80047 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		D7DD08819DE2EDCC1BBEC445 /* CoupleTodoWidgetExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = CoupleTodoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7DD08819DE2EDCC1BBEC445 /* CoupleTodoWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CoupleTodoWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D86D1677B673C1E3E1983423 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
 		E2EC61AC2FC42DF07988B08C /* FirebaseAuthenticationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthenticationServiceTests.swift; sourceTree = "<group>"; };
+		ECC201D3F1A9D1A49FF50B70 /* AvatarPair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarPair.swift; sourceTree = "<group>"; };
+		EE8AF57C32B57A9B42BB3551 /* UsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsView.swift; sourceTree = "<group>"; };
+		F1A2B3C4D5E6F70819203A01 /* TodayHeroSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayHeroSection.swift; sourceTree = "<group>"; };
+		F1A2B3C4D5E6F70819203A02 /* TaskSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSectionHeaderView.swift; sourceTree = "<group>"; };
+		F1A2B3C4D5E6F70819203A03 /* TaskSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSectionView.swift; sourceTree = "<group>"; };
+		F1A2B3C4D5E6F70819203A04 /* EditableTaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTaskRow.swift; sourceTree = "<group>"; };
+		F1A2B3C4D5E6F70819203A05 /* PartnerBoardSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerBoardSection.swift; sourceTree = "<group>"; };
 		F2439FEC492625F2F6F82FC1 /* CoupleTodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CoupleTodo.entitlements; sourceTree = "<group>"; };
 		FA317ABD7F56B8F827B5A8DC /* SettlementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettlementView.swift; sourceTree = "<group>"; };
 		FFA9A2B76E1F281759802E1C /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
@@ -179,6 +249,14 @@
 			path = CoupleTodoUITests;
 			sourceTree = "<group>";
 		};
+		33F7AF961E271BAF0F078DC8 /* Us */ = {
+			isa = PBXGroup;
+			children = (
+				EE8AF57C32B57A9B42BB3551 /* UsView.swift */,
+			);
+			path = Us;
+			sourceTree = "<group>";
+		};
 		379C97306EE5CAE4004BCB54 /* Settlement */ = {
 			isa = PBXGroup;
 			children = (
@@ -192,6 +270,7 @@
 		40678B84D9EEC8CE2C8CD7BF /* Planning */ = {
 			isa = PBXGroup;
 			children = (
+				A6452F7C223BA42176A6A200 /* PlanningTabView.swift */,
 				A8F56C09285AFB12CDEF6229 /* PlanningView.swift */,
 			);
 			path = Planning;
@@ -219,6 +298,7 @@
 			children = (
 				F2439FEC492625F2F6F82FC1 /* CoupleTodo.entitlements */,
 				B6B72DCDAB9A3DA8D803F37E /* Info.plist */,
+				AA00BB11CC22DD33EE44FF02 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -226,6 +306,7 @@
 		54B91B805F5A07E8E831B0C2 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				AA11BB22CC33DD4455EE0003 /* AvatarPickerView.swift */,
 				2CF749D9CF9B9F2AE48405B1 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -252,6 +333,8 @@
 				379C97306EE5CAE4004BCB54 /* Settlement */,
 				DDD8AE4462C1E063786E5289 /* Sync */,
 				F45E72551479C915983C1571 /* Tasks */,
+				B7326CBD424BA1A70DCB09E8 /* Today */,
+				33F7AF961E271BAF0F078DC8 /* Us */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -296,6 +379,27 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
+		AA11BB22CC33DD4455EE0010 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				AA11BB22CC33DD4455EE0002 /* AvatarProcessor.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		B7326CBD424BA1A70DCB09E8 /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				F1A2B3C4D5E6F70819203A04 /* EditableTaskRow.swift */,
+				F1A2B3C4D5E6F70819203A05 /* PartnerBoardSection.swift */,
+				F1A2B3C4D5E6F70819203A02 /* TaskSectionHeaderView.swift */,
+				F1A2B3C4D5E6F70819203A03 /* TaskSectionView.swift */,
+				F1A2B3C4D5E6F70819203A01 /* TodayHeroSection.swift */,
+				5FCFF7596816C9BE44F57F74 /* TodayView.swift */,
+			);
+			path = Today;
+			sourceTree = "<group>";
+		};
 		BFE0BF2954CDB3D5F1F32DA4 /* CoupleTodoWidget */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,7 +426,11 @@
 			isa = PBXGroup;
 			children = (
 				5F37B79BE17EBB33DF75718E /* AppCoordinatorAuthTests.swift */,
+				BDD9C5C01F45E2DDE5B5D5AD /* DashboardPresenterTests.swift */,
 				E2EC61AC2FC42DF07988B08C /* FirebaseAuthenticationServiceTests.swift */,
+				14DE70DBCAD5E7EBEE7BE230 /* MissionControlPresentationTests.swift */,
+				BB11CC22DD33EE4455EE0004 /* PlanningPresenterTests.swift */,
+				BB11CC22DD33EE4455EE0003 /* SettlementPresenterTests.swift */,
 			);
 			path = CoupleTodoAppTests;
 			sourceTree = "<group>";
@@ -360,11 +468,28 @@
 			path = Sync;
 			sourceTree = "<group>";
 		};
+		DEC057F8D44D888316893CEF /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				D86D1677B673C1E3E1983423 /* Animations.swift */,
+				BB11CC22DD33EE4455EE0005 /* CoupleGradients.swift */,
+				3A0F7FA74897A101CE648D88 /* CoupleTheme.swift */,
+				CE113CE77D21031AB1769033 /* DashboardPresenter.swift */,
+				54570EC195776512E439B867 /* MissionControlComponents.swift */,
+				01B192186676E7DB9D28BCF2 /* MissionControlPresentation.swift */,
+				BB11CC22DD33EE4455EE0002 /* PlanningPresenter.swift */,
+				BB11CC22DD33EE4455EE0001 /* SettlementPresenter.swift */,
+				F981C0DBF53362D8B6CA38E5 /* Components */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		E50884A8DD59A64311F2740E /* App */ = {
 			isa = PBXGroup;
 			children = (
 				45F326BFA7D7B4C4CCE33C85 /* AppCoordinator.swift */,
 				FFA9A2B76E1F281759802E1C /* AppMain.swift */,
+				AA00BB11CC22DD33EE44FF01 /* Assets.xcassets */,
 				1C1B50DBAD40124CE8ECE122 /* GoogleService-Info.plist */,
 				8DEEA641F96EF62DAF54CC02 /* GoogleService-Info.plist.example */,
 				6C7585BA38B87A3C09D055E3 /* RootView.swift */,
@@ -373,7 +498,9 @@
 				6C6E1CB7C03F5AC42861B9E7 /* Features */,
 				190913A2BB156D8A954247BD /* Platform */,
 				443A691DBA726337F5D5E737 /* Routing */,
+				AA11BB22CC33DD4455EE0010 /* Services */,
 				4E335381AD9B0AC3B30458D8 /* Support */,
+				DEC057F8D44D888316893CEF /* UI */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -395,6 +522,24 @@
 				8D791394AF906C721B0BA6BA /* TaskEditorView.swift */,
 			);
 			path = Tasks;
+			sourceTree = "<group>";
+		};
+		F981C0DBF53362D8B6CA38E5 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				ECC201D3F1A9D1A49FF50B70 /* AvatarPair.swift */,
+				24D6E46F0C58596E42017CB8 /* CelebrationOverlay.swift */,
+				8D107B3E4268870FB3DB3B54 /* CountdownBubble.swift */,
+				D2676D5586DFD8FC92F1F6C1 /* CoupleCard.swift */,
+				AA11BB22CC33DD4455EE0001 /* DeadlineBanner.swift */,
+				B818FDE7BC495A5F53CEA206 /* ProgressRing.swift */,
+				415FE597AA5096E764DE9059 /* PulseButton.swift */,
+				45246F6BA3B7B1E35C28ADE5 /* QuickAddRow.swift */,
+				742DE3968DBE3224A60811CB /* StatusPill.swift */,
+				AA11BB22CC33DD4455EE0099 /* SwipeToDeleteRow.swift */,
+				A52DED786A3F8DAC0639B734 /* TaskRow.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -524,6 +669,8 @@
 			files = (
 				A1B249F3AA52603B100CC834 /* GoogleService-Info.plist in Resources */,
 				5690D838FA69E2BB5274D8AB /* GoogleService-Info.plist.example in Resources */,
+				AA00BB11CC22DD33EE44FF03 /* Assets.xcassets in Resources */,
+				AA00BB11CC22DD33EE44FF04 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -551,29 +698,58 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				071A71572B1532366DAB96C4 /* Animations.swift in Sources */,
 				B6DAE817989E164E8A102EA4 /* AppCoordinator.swift in Sources */,
+				AA11BB22CC33DD4455FF0002 /* AvatarProcessor.swift in Sources */,
+				AA11BB22CC33DD4455FF0003 /* AvatarPickerView.swift in Sources */,
 				E9255D92C178830AD701A23E /* AppMain.swift in Sources */,
 				4EC56B20B70277FFA473ACDF /* AppRoute.swift in Sources */,
 				C16BDB8AFD4AB45F2D6DE18D /* AuthView.swift in Sources */,
+				2AE537983EDBEA9089CF93DA /* AvatarPair.swift in Sources */,
+				FD443D578DC12E4F8F71A3A1 /* CelebrationOverlay.swift in Sources */,
+				0B964F8AF9130A1AFF47AA63 /* CountdownBubble.swift in Sources */,
+				1F4386F361EB0151BB38C26D /* CoupleCard.swift in Sources */,
+				3E5D1FD04FA82D0F7C177E10 /* CoupleTheme.swift in Sources */,
 				BADC1770C63F1CA2864DFFAF /* CoupleTodoAppIntents.swift in Sources */,
 				32518095D899D39C58F3B638 /* DailySettlementActivity.swift in Sources */,
+				1F894B42310DE8BBF9D4BE39 /* DashboardPresenter.swift in Sources */,
 				A16D156D7992777A0B1E68BB /* DashboardView.swift in Sources */,
+				AA11BB22CC33DD4455FF0001 /* DeadlineBanner.swift in Sources */,
 				BE492CB72C9E02BAA788126D /* DeepLinkRouter.swift in Sources */,
 				75AFB9CC11563BCFCDAC8B54 /* DemoAppEnvironment.swift in Sources */,
 				31E4BACC7AAFEBE11D9AC379 /* InMemoryRepositories.swift in Sources */,
+				7710C8FA17796EBF1D407005 /* MissionControlComponents.swift in Sources */,
+				22E043EA601C944C1ACCA4C4 /* MissionControlPresentation.swift in Sources */,
 				CCF3836A749020D45AB08E21 /* NotificationService.swift in Sources */,
 				E42A5B7BADC16DFF0492E77A /* OfflineBannerView.swift in Sources */,
 				9FFDC2E1033E73C0B9100252 /* PairingView.swift in Sources */,
 				ECB70AC2A586C0248A3A79C4 /* PaymentAcknowledgementView.swift in Sources */,
 				4C21F8C74B78F058299133D8 /* PlanningReminderActivity.swift in Sources */,
+				D10524938A3FAC529730DA21 /* PlanningTabView.swift in Sources */,
 				6460C32C255051FB54C02FE7 /* PlanningView.swift in Sources */,
+				2C793B8FE75CC584A5F91E92 /* ProgressRing.swift in Sources */,
+				48AA784F9D86BAE55BD15B03 /* PulseButton.swift in Sources */,
+				438CCD6A50A014B9ABADEC7C /* QuickAddRow.swift in Sources */,
+				AA11BB22CC33DD4455FF0099 /* SwipeToDeleteRow.swift in Sources */,
 				4A032ADDA5EA885D47CC9E4D /* RewardsView.swift in Sources */,
 				A40DF860D79F7343FFA942E6 /* RootView.swift in Sources */,
 				D4C413F391ED18CFF51F9447 /* SettingsView.swift in Sources */,
 				C086123786B6128B60D12892 /* SettlementHistoryView.swift in Sources */,
 				5492F137C87460D32CE6D80C /* SettlementView.swift in Sources */,
 				EFAD51D378FCA86AD40FC121 /* SharedSnapshotWriter.swift in Sources */,
+				D208BDF4A5C627625C2D5AE2 /* StatusPill.swift in Sources */,
 				A78525E89D5BEDC59BBBDA3D /* TaskEditorView.swift in Sources */,
+				15B0A720FF009EE568DD773B /* TaskRow.swift in Sources */,
+				998EF145B90EA4A64E5EBDB3 /* TodayView.swift in Sources */,
+				A1B3C4D5E6F708192A3B4C01 /* TodayHeroSection.swift in Sources */,
+				A1B3C4D5E6F708192A3B4C02 /* TaskSectionHeaderView.swift in Sources */,
+				A1B3C4D5E6F708192A3B4C03 /* TaskSectionView.swift in Sources */,
+				A1B3C4D5E6F708192A3B4C04 /* EditableTaskRow.swift in Sources */,
+				A1B3C4D5E6F708192A3B4C05 /* PartnerBoardSection.swift in Sources */,
+				453B1CA2F1269E5B36C6E839 /* UsView.swift in Sources */,
+				BB11CC22DD33EE4455FF0001 /* SettlementPresenter.swift in Sources */,
+				BB11CC22DD33EE4455FF0002 /* PlanningPresenter.swift in Sources */,
+				BB11CC22DD33EE4455FF0005 /* CoupleGradients.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -582,7 +758,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				82E9E00DBBCF396983AE4602 /* AppCoordinatorAuthTests.swift in Sources */,
+				20AD27D3E0286395F785D108 /* DashboardPresenterTests.swift in Sources */,
 				8061C2F3B88BB169AA263AE0 /* FirebaseAuthenticationServiceTests.swift in Sources */,
+				8D294C0F58D27D35F02F3EEA /* MissionControlPresentationTests.swift in Sources */,
+				BB11CC22DD33EE4455FF0003 /* SettlementPresenterTests.swift in Sources */,
+				BB11CC22DD33EE4455FF0004 /* PlanningPresenterTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -613,7 +793,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGNING_ALLOWED = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -671,7 +851,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -688,7 +868,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGNING_ALLOWED = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -706,8 +886,9 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CoupleTodoWidget/CoupleTodoWidget.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6NM4RF95KN;
 				INFOPLIST_FILE = CoupleTodoWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -726,8 +907,9 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CoupleTodoWidget/CoupleTodoWidget.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6NM4RF95KN;
 				INFOPLIST_FILE = CoupleTodoWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -747,7 +929,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGNING_ALLOWED = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -766,7 +948,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGNING_ALLOWED = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -786,17 +968,21 @@
 				CODE_SIGN_ENTITLEMENTS = App/Support/CoupleTodo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6NM4RF95KN;
 				INFOPLIST_FILE = App/Support/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = "$(inherited) -ObjC";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.app;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -811,17 +997,21 @@
 				CODE_SIGN_ENTITLEMENTS = App/Support/CoupleTodo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6NM4RF95KN;
 				INFOPLIST_FILE = App/Support/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				OTHER_LDFLAGS = "$(inherited) -ObjC";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.coupletodo.app;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -880,7 +1070,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

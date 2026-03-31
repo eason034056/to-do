@@ -16,11 +16,20 @@ public struct SaveNextWeekRewardRequest: Sendable {
     }
 }
 
-public enum SaveNextWeekRewardError: Error, Equatable {
+public enum SaveNextWeekRewardError: Error, Equatable, LocalizedError {
     case coupleNotFound
     case forbidden
     case emptyRewardText
     case rewardLocked
+
+    public var errorDescription: String? {
+        switch self {
+        case .coupleNotFound: "Couple not found."
+        case .forbidden: "You don't have permission to edit this reward."
+        case .emptyRewardText: "Reward text cannot be empty."
+        case .rewardLocked: "This reward is locked. You can only edit rewards that are still in draft."
+        }
+    }
 }
 
 public struct SaveNextWeekRewardUseCase: Sendable {

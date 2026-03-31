@@ -242,9 +242,16 @@ public actor FirestoreRewardWeekRepository: RewardWeekRepository {
     }
 
     public func upsertRewardWeek(_ rewardWeek: RewardWeek) async throws {
-        try await database.document(
+        let ref = database.document(
             FirestorePaths.rewardWeekDocument(coupleId: rewardWeek.coupleId, weekKey: rewardWeek.weekKey)
-        ).setDataAsync(RewardWeekDocument.encode(rewardWeek), merge: true)
+        )
+        let snapshot = try await ref.getDocumentAsync()
+        if snapshot.exists {
+            // Full `setData(merge:)` touches server-only fields (e.g. null `earnedAt` vs missing) and fails rules.
+            try await ref.updateDataAsync(RewardWeekDocument.clientDraftFieldsOnlyUpdate(rewardWeek))
+        } else {
+            try await ref.setDataAsync(RewardWeekDocument.encode(rewardWeek), merge: false)
+        }
     }
 
     public func fetchRewardWeek(coupleId: String, weekKey: String) async throws -> RewardWeek? {

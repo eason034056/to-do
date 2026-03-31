@@ -4,3 +4,13 @@
 
 # Firebase iOS config contains API keys — never commit real values (use GoogleService-Info.plist.example).
 App/GoogleService-Info.plist
+
+# Apple Developer Account Auth Key
+AuthKey_56NR4X8726.p8
+apn-keyid.png
+
+# Xcode user data
+xcuserdata/
+
+# Backend build output
+Backend/functions/lib/

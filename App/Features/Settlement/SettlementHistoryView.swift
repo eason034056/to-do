@@ -8,34 +8,66 @@ struct SettlementHistoryView: View {
 
         Group {
             if entries.isEmpty {
-                ContentUnavailableView("No settlement history", systemImage: "clock.arrow.circlepath")
+                ContentUnavailableView("No history yet", systemImage: "clock.arrow.circlepath")
             } else {
-                List(entries) { entry in
-                    Section(entry.dateKey) {
-                        Text("Gross owed: \(currency(entry.grossOwesAmount))")
-                        Text("Gross receivable: \(currency(entry.grossReceivableAmount))")
-                        Text("Net: \(currency(entry.netAmount))")
-                            .font(.body.weight(.semibold))
+                historyList(entries)
+            }
+        }
+        .navigationTitle("History")
+        .task {
+            await coordinator.refreshPayments()
+        }
+    }
+
+    private func historyList(_ entries: [AppCoordinator.SettlementHistoryEntry]) -> some View {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: CoupleTheme.sectionSpacing) {
+                ForEach(entries) { entry in
+                    VStack(alignment: .leading, spacing: CoupleTheme.itemSpacing) {
+                        Text(entry.dateKey)
+                            .font(.sectionTitle)
+                            .fontDesign(.rounded)
+
+                        CoupleCard(emphasis: .calm) {
+                            LabeledContent("Owed") {
+                                Text(currency(entry.grossOwesAmount))
+                            }
+                            LabeledContent("Receivable") {
+                                Text(currency(entry.grossReceivableAmount))
+                            }
+                            LabeledContent("Net") {
+                                Text(currency(entry.netAmount))
+                                    .bold()
+                                    .foregroundStyle(entry.netAmount > 0 ? CoupleTheme.urgent : CoupleTheme.success)
+                            }
+                        }
 
                         ForEach(entry.records) { record in
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("\(currency(record.amount)) · \(record.status.rawValue)")
-                                Text("Debtor: \(record.debtorUserId == coordinator.currentUserId ? "You" : "Partner")")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Button("Open Payment") {
-                                    coordinator.navigate(to: .payment(recordId: record.id))
+                            NavigationLink(value: AppRoute.payment(recordId: record.id)) {
+                                CoupleCard(emphasis: record.status == .acknowledged ? .success : .urgent) {
+                                    HStack {
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text("\(currency(record.amount)) \(record.currency)")
+                                                .font(.headline)
+                                            Text(record.debtorUserId == coordinator.currentUserId ? "You owe" : "Partner owes")
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        Spacer()
+                                        StatusPill(
+                                            text: record.status.rawValue.capitalized,
+                                            emphasis: record.status == .acknowledged ? .success : .urgent
+                                        )
+                                    }
                                 }
-                                .buttonStyle(.bordered)
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                 }
             }
-        }
-        .navigationTitle("Settlement History")
-        .task {
-            await coordinator.refreshPayments()
+            .padding(.horizontal, CoupleTheme.screenHorizontalPadding)
+            .padding(.vertical, 16)
         }
     }
 

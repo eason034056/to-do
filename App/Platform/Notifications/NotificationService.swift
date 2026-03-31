@@ -15,7 +15,11 @@ enum NotificationService {
         let planningReminderCategory = UNNotificationCategory(
             identifier: NotificationCategory.planningReminder.rawValue,
             actions: [
-                UNNotificationAction(identifier: "open_planning", title: "Open Planning", options: .foreground)
+                UNNotificationAction(
+                    identifier: "open_planning",
+                    title: NotificationCopy.actionTitle(for: .planningReminder),
+                    options: .foreground
+                )
             ],
             intentIdentifiers: [],
             options: []
@@ -24,7 +28,11 @@ enum NotificationService {
         let planningEscalationCategory = UNNotificationCategory(
             identifier: NotificationCategory.planningEscalation.rawValue,
             actions: [
-                UNNotificationAction(identifier: "open_planning", title: "Submit Now", options: .foreground)
+                UNNotificationAction(
+                    identifier: "open_planning",
+                    title: NotificationCopy.actionTitle(for: .planningEscalation),
+                    options: .foreground
+                )
             ],
             intentIdentifiers: [],
             options: []
@@ -33,7 +41,11 @@ enum NotificationService {
         let settlementReadyCategory = UNNotificationCategory(
             identifier: NotificationCategory.settlementReady.rawValue,
             actions: [
-                UNNotificationAction(identifier: "open_settlement", title: "View Settlement", options: .foreground)
+                UNNotificationAction(
+                    identifier: "open_settlement",
+                    title: NotificationCopy.actionTitle(for: .settlementReady),
+                    options: .foreground
+                )
             ],
             intentIdentifiers: [],
             options: []
@@ -42,7 +54,11 @@ enum NotificationService {
         let rewardEarnedCategory = UNNotificationCategory(
             identifier: NotificationCategory.rewardEarned.rawValue,
             actions: [
-                UNNotificationAction(identifier: "open_rewards", title: "View Reward", options: .foreground)
+                UNNotificationAction(
+                    identifier: "open_rewards",
+                    title: NotificationCopy.actionTitle(for: .rewardEarned),
+                    options: .foreground
+                )
             ],
             intentIdentifiers: [],
             options: []
@@ -51,7 +67,11 @@ enum NotificationService {
         let paymentPendingCategory = UNNotificationCategory(
             identifier: NotificationCategory.paymentPending.rawValue,
             actions: [
-                UNNotificationAction(identifier: "open_payment", title: "View Payment", options: .foreground)
+                UNNotificationAction(
+                    identifier: "open_payment",
+                    title: NotificationCopy.actionTitle(for: .paymentPending),
+                    options: .foreground
+                )
             ],
             intentIdentifiers: [],
             options: []
@@ -85,8 +105,6 @@ enum NotificationService {
         return settings.timeSensitiveSetting == .enabled
     }
 
-    /// Extracts a deep link URL from the push notification payload.
-    /// Backend attaches `deepLink` as a string in the `aps` custom data or top-level payload.
     static func deepLinkURL(from userInfo: [AnyHashable: Any]) -> URL? {
         if let deepLink = userInfo["deepLink"] as? String {
             return URL(string: deepLink)

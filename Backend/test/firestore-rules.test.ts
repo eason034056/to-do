@@ -279,7 +279,118 @@ describe("Payment rules", () => {
   });
 });
 
+describe("RewardWeek rules - create", () => {
+  test("member can create draft reward with full client payload", async () => {
+    const db = testEnv.authenticatedContext(USER_A).firestore();
+    await assertSucceeds(
+      db.doc(`couples/${COUPLE_ID}/rewardWeeks/2026-W15`).set({
+        id: `${COUPLE_ID}_2026-W15`,
+        coupleId: COUPLE_ID,
+        weekKey: "2026-W15",
+        effectiveWeekStartDate: "2026-04-08",
+        draftedInWeekKey: "2026-W14",
+        rewardText: "吃飯",
+        status: "draft",
+        eligibility: { [USER_A]: true, [USER_B]: true },
+        memberLocalWeekKeys: {},
+        finalizeWhenBothMembersWeekClosed: true,
+        earnedAt: null,
+        missedAt: null,
+        updatedAt: new Date(),
+      })
+    );
+  });
+
+  test("outsider cannot create reward", async () => {
+    const db = testEnv.authenticatedContext(OUTSIDER).firestore();
+    await assertFails(
+      db.doc(`couples/${COUPLE_ID}/rewardWeeks/2026-W15`).set({
+        id: `${COUPLE_ID}_2026-W15`,
+        coupleId: COUPLE_ID,
+        weekKey: "2026-W15",
+        effectiveWeekStartDate: "2026-04-08",
+        draftedInWeekKey: "2026-W14",
+        rewardText: "Unauthorized",
+        status: "draft",
+        eligibility: { [USER_A]: true, [USER_B]: true },
+        memberLocalWeekKeys: {},
+        finalizeWhenBothMembersWeekClosed: true,
+        earnedAt: null,
+        missedAt: null,
+        updatedAt: new Date(),
+      })
+    );
+  });
+
+  test("member cannot create reward with non-draft status", async () => {
+    const db = testEnv.authenticatedContext(USER_A).firestore();
+    await assertFails(
+      db.doc(`couples/${COUPLE_ID}/rewardWeeks/2026-W15`).set({
+        id: `${COUPLE_ID}_2026-W15`,
+        coupleId: COUPLE_ID,
+        weekKey: "2026-W15",
+        effectiveWeekStartDate: "2026-04-08",
+        draftedInWeekKey: "2026-W14",
+        rewardText: "Cheat",
+        status: "earned",
+        eligibility: { [USER_A]: true, [USER_B]: true },
+        memberLocalWeekKeys: {},
+        finalizeWhenBothMembersWeekClosed: true,
+        updatedAt: new Date(),
+      })
+    );
+  });
+
+  test("member cannot create reward with mismatched coupleId", async () => {
+    const db = testEnv.authenticatedContext(USER_A).firestore();
+    await assertFails(
+      db.doc(`couples/${COUPLE_ID}/rewardWeeks/2026-W15`).set({
+        id: `${COUPLE_ID}_2026-W15`,
+        coupleId: "wrong_couple",
+        weekKey: "2026-W15",
+        effectiveWeekStartDate: "2026-04-08",
+        draftedInWeekKey: "2026-W14",
+        rewardText: "Mismatch",
+        status: "draft",
+        eligibility: {},
+        memberLocalWeekKeys: {},
+        finalizeWhenBothMembersWeekClosed: true,
+        updatedAt: new Date(),
+      })
+    );
+  });
+});
+
 describe("RewardWeek rules - lock guard", () => {
+  test("member can update draft reward using only client-allowed fields", async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await db.doc(`couples/${COUPLE_ID}/rewardWeeks/2026-W15`).set({
+        id: "rw_draft",
+        coupleId: COUPLE_ID,
+        weekKey: "2026-W15",
+        effectiveWeekStartDate: "2026-04-08",
+        draftedInWeekKey: "2026-W14",
+        rewardText: "Old text",
+        status: "draft",
+        eligibility: { [USER_A]: true, [USER_B]: true },
+        memberLocalWeekKeys: {},
+        finalizeWhenBothMembersWeekClosed: true,
+        updatedAt: new Date(),
+      });
+    });
+
+    const db = testEnv.authenticatedContext(USER_A).firestore();
+    await assertSucceeds(
+      db.doc(`couples/${COUPLE_ID}/rewardWeeks/2026-W15`).update({
+        rewardText: "吃飯",
+        draftedInWeekKey: "2026-W14",
+        effectiveWeekStartDate: "2026-04-08",
+        updatedAt: new Date(),
+      })
+    );
+  });
+
   test("cannot update non-draft reward", async () => {
     await testEnv.withSecurityRulesDisabled(async (context) => {
       const db = context.firestore();

@@ -24,6 +24,7 @@ public protocol CoupleLifecycleGateway: AnyObject {
         penaltyPolicy: PenaltyPolicy
     ) async throws -> PairingResult
     func joinCouple(inviteCode: String) async throws -> PairingResult
+    func deleteAccount() async throws
 }
 
 public final class FirebaseCoupleLifecycleGateway: CoupleLifecycleGateway {
@@ -55,6 +56,10 @@ public final class FirebaseCoupleLifecycleGateway: CoupleLifecycleGateway {
                 "inviteCode": inviteCode.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
             ]
         )
+    }
+
+    public func deleteAccount() async throws {
+        _ = try await functions.httpsCallable("deleteAccount").call([:])
     }
 
     private func call(functionName: String, data: [String: Any]) async throws -> PairingResult {

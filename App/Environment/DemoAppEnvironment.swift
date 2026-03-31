@@ -429,6 +429,8 @@ private final class DemoCoupleLifecycleGateway: CoupleLifecycleGateway {
         )
     }
 
+    func deleteAccount() async throws {}
+
     func joinCouple(inviteCode: String) async throws -> PairingResult {
         let couple = try await JoinCoupleUseCase(
             userRepository: userRepository,

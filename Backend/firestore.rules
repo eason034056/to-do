@@ -34,6 +34,32 @@ service cloud.firestore {
       return !request.resource.data.diff(resource.data).affectedKeys().hasAny(keys);
     }
 
+    // Client marks planning missed (deadline passed, no submission). Rules must allow false→true.
+    function planPlanningMissedUnchanged() {
+      return request.resource.data.planningMissed == resource.data.planningMissed;
+    }
+
+    function planPlanningMissedWasNotYetTrue() {
+      return resource.data.planningMissed == false
+        || resource.data.planningMissed == null;
+    }
+
+    function planOwnerMarksPlanningMissed() {
+      return planPlanningMissedWasNotYetTrue()
+        && request.resource.data.planningMissed == true
+        && request.auth.uid == resource.data.userId
+        && request.resource.data.submittedAt == resource.data.submittedAt
+        && resource.data.submittedAt == null;
+    }
+
+    function planCreatePlanningMissedAllowed() {
+      return request.resource.data.planningMissed == false
+        || (
+          request.resource.data.planningMissed == true
+          && request.resource.data.submittedAt == null
+        );
+    }
+
     // ─── users ───
     match /users/{userId} {
       allow read: if canReadUserProfile(userId);
@@ -74,13 +100,13 @@ service cloud.firestore {
           && request.auth.uid == request.resource.data.userId
           && request.resource.data.coupleId == coupleId
           && request.resource.data.id == planId
-          && request.resource.data.planningMissed == false;
+          && planCreatePlanningMissedAllowed();
         allow update: if isCoupleMember(coupleId)
           && request.auth.uid == resource.data.userId
           && request.resource.data.userId == resource.data.userId
           && request.resource.data.coupleId == resource.data.coupleId
           && request.resource.data.id == resource.data.id
-          && request.resource.data.planningMissed == resource.data.planningMissed;
+          && (planPlanningMissedUnchanged() || planOwnerMarksPlanningMissed());
         allow delete: if false;
 
         // ─── tasks (under plan) ───

@@ -4,7 +4,6 @@ import SwiftUI
 import CoupleTodoCore
 
 struct PlanningReminderAttributes: ActivityAttributes {
-    /// Fixed context that doesn't change during the activity's lifetime.
     struct ContentState: Codable, Hashable {
         var selfSubmitted: Bool
         var partnerSubmitted: Bool
@@ -18,45 +17,51 @@ struct PlanningReminderAttributes: ActivityAttributes {
 struct PlanningReminderLiveActivityView: View {
     let context: ActivityViewContext<PlanningReminderAttributes>
 
+    private var isUrgent: Bool { context.state.remainingMinutes <= 15 }
+    private var accentColor: Color { isUrgent ? Color(red: 0.65, green: 0.25, blue: 0.22) : Color(red: 0.21, green: 0.345, blue: 0.447) }
+
     var body: some View {
-        HStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 4) {
-                Label("Tomorrow Plan", systemImage: "pencil.and.list.clipboard")
-                    .font(.headline)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Label("Plan Tomorrow", systemImage: "calendar.badge.plus")
+                    .font(.headline.bold())
+                    .fontDesign(.rounded)
+                Spacer()
+                HStack(spacing: 4) {
+                    Image(systemName: "clock.fill")
+                        .font(.caption)
+                        .foregroundStyle(accentColor)
+                    Text(context.state.remainingMinutes > 0 ? "\(context.state.remainingMinutes)m" : "0m")
+                        .font(.title3.bold())
+                        .fontDesign(.rounded)
+                        .foregroundStyle(accentColor)
+                        .contentTransition(.numericText())
+                }
+            }
+
+            HStack(spacing: 12) {
+                statusPill(label: "You", submitted: context.state.selfSubmitted)
+                statusPill(label: "Partner", submitted: context.state.partnerSubmitted)
+                Spacer()
                 Text("Cutoff: \(context.state.cutoffTime)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-
-            VStack(alignment: .trailing, spacing: 6) {
-                HStack(spacing: 8) {
-                    statusBadge(label: "You", submitted: context.state.selfSubmitted)
-                    statusBadge(label: "Partner", submitted: context.state.partnerSubmitted)
-                }
-
-                if context.state.remainingMinutes > 0 {
-                    Text("\(context.state.remainingMinutes) min left")
-                        .font(.caption.bold())
-                        .foregroundStyle(context.state.remainingMinutes <= 15 ? .red : .orange)
-                } else {
-                    Text("Cutoff passed")
-                        .font(.caption.bold())
-                        .foregroundStyle(.red)
-                }
             }
         }
         .padding()
     }
 
-    private func statusBadge(label: String, submitted: Bool) -> some View {
+    private func statusPill(label: String, submitted: Bool) -> some View {
         HStack(spacing: 4) {
-            Circle()
-                .fill(submitted ? Color.green : Color.orange)
-                .frame(width: 8, height: 8)
+            Image(systemName: submitted ? "checkmark.circle.fill" : "clock")
+                .font(.caption)
+                .foregroundStyle(submitted ? Color(red: 0.30, green: 0.50, blue: 0.38) : .secondary)
             Text(label)
-                .font(.caption2)
+                .font(.caption.bold())
         }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(.regularMaterial)
+        .clipShape(Capsule())
     }
 }

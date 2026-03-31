@@ -10,21 +10,21 @@ struct OfflineBannerView: View {
         if shouldShowBanner {
             HStack(spacing: 8) {
                 Image(systemName: bannerIcon)
-                    .font(.subheadline)
+                    .font(.callout)
                 Text(bannerMessage)
-                    .font(.subheadline)
+                    .font(.callout)
                 Spacer()
                 if syncTracker.status == .syncFailed {
-                    Button("Retry") {
-                        onRetry()
-                    }
-                    .font(.subheadline.bold())
+                    Button("Retry", action: onRetry)
+                        .font(.callout.bold())
                 }
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 10)
-            .background(bannerColor.opacity(0.15))
-            .foregroundColor(bannerColor)
+            .background(bannerColor.opacity(0.12))
+            .foregroundStyle(bannerColor)
+            .clipShape(.rect(cornerRadius: 12))
+            .transition(.move(edge: .top).combined(with: .opacity))
         }
     }
 
@@ -34,24 +34,22 @@ struct OfflineBannerView: View {
 
     private var bannerIcon: String {
         switch connectivity {
-        case .offline:
-            return "wifi.slash"
-        default:
-            return "exclamationmark.arrow.triangle.2.circlepath"
+        case .offline: "wifi.slash"
+        default: "exclamationmark.arrow.triangle.2.circlepath"
         }
     }
 
     private var bannerMessage: String {
         if connectivity == .offline {
-            return "You're offline. Changes will sync when connection returns."
+            return "You're offline"
         }
         if syncTracker.status == .syncFailed {
-            return "Sync failed. Tap Retry."
+            return "Sync failed"
         }
         return "Syncing..."
     }
 
     private var bannerColor: Color {
-        connectivity == .offline ? .orange : .red
+        connectivity == .offline ? CoupleTheme.warning : CoupleTheme.urgent
     }
 }
